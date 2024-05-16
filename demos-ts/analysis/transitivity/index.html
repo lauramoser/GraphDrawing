@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+
+<!-- ////////////////////////////////////////////////////////////////////////
+     // @license
+     // This demo file is part of yFiles for HTML 2.6.0.4.
+     // Copyright (c) 2000-2024 by yWorks GmbH, Vor dem Kreuzberg 28,
+     // 72070 Tuebingen, Germany. All rights reserved.
+     //
+     // yFiles demo files exhibit yFiles for HTML functionalities. Any redistribution
+     // of demo files in source code or binary form, with or without
+     // modification, is not permitted.
+     //
+     // Owners of a valid software license for a yFiles for HTML version that this
+     // demo is shipped with are allowed to use the demo source code as basis
+     // for their own yFiles for HTML powered applications. Use of such programs is
+     // governed by the rights and conditions as set out in the yFiles for HTML
+     // license agreement.
+     //
+     // THIS SOFTWARE IS PROVIDED ''AS IS'' AND ANY EXPRESS OR IMPLIED
+     // WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+     // MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN
+     // NO EVENT SHALL yWorks BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+     // SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+     // TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+     // PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+     // LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+     // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+     // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+     //
+     ////////////////////////////////////////////////////////////////////////-->
+
+    <title>Transitivity Demo [yFiles for HTML]</title>
+    <script type="module" src="../../resources/demo-page-init.ts" async></script>
+
+    <link rel="stylesheet" href="../../resources/style/demo.css" />
+    <link rel="stylesheet" href="./transitivity.css" />
+
+    <style>
+      table {
+        border-collapse: separate;
+        border-spacing: 0;
+        width: 90%;
+        padding: 0;
+      }
+
+      tr.bottom td {
+        border-bottom: thin solid black;
+      }
+      .table td.header {
+        color: darkred;
+        font-weight: bold;
+      }
+
+      td {
+        text-align: left;
+        padding-bottom: 5px;
+        padding-top: 5px;
+      }
+      .table td:last-child {
+        text-align: center;
+      }
+
+      #show-transitive-edges-label {
+        display: none;
+        cursor: pointer;
+        vertical-align: middle;
+        width: 24px;
+      }
+    </style>
+    <script src="../../resources/filesystem-warning.js"></script>
+  </head>
+  <body>
+    <header class="demo-header">
+      <a
+        href="https://www.yworks.com/products/yfiles"
+        class="demo-header__y-logo"
+        title="Visit yFiles product details"
+        target="_blank"
+      ></a>
+      <div class="demo-header__breadcrumb-wrapper">
+        <a href="https://www.yworks.com/products/yfiles">yFiles for HTML</a>
+        <a href="../../README.html">Demos</a>
+
+        <span>Transitivity</span>
+        <a href="../../README.html" class="demo-header__mobile-back">yFiles Demos</a>
+      </div>
+      <div class="demo-header__right">
+        <show-source-button></show-source-button>
+        <fullscreen-button></fullscreen-button>
+      </div>
+    </header>
+
+    <div class="demo-page__toolbar">
+      <button data-command="INCREASE_ZOOM"></button>
+      <button data-command="DECREASE_ZOOM"></button>
+      <button data-command="FIT_GRAPH_BOUNDS"></button>
+
+      <span class="demo-separator"></span>
+
+      <button data-command="UNDO"></button>
+      <button data-command="REDO"></button>
+
+      <span class="demo-separator"></span>
+
+      <label for="algorithmComboBox">Algorithms</label>
+      <select title="Select an algorithm" id="algorithms">
+        <option>Original Graph</option>
+        <option>Transitive Closure</option>
+        <option>Transitive Reduction</option>
+      </select>
+
+      <input type="checkbox" id="show-transitive-edges" class="demo-toggle-button" checked="" />
+      <label
+        id="show-transitive-edges-label"
+        for="show-transitive-edges"
+        class="demo-icon-yIconShowAll"
+        title="Show/Hide Transitive Edges on Reduction"
+      ></label>
+
+      <span class="demo-separator"></span>
+
+      <button title="Run Complete Layout" id="layout" class="demo-icon-yIconLayout labeled">
+        Layout
+      </button>
+    </div>
+    <aside class="demo-page__description">
+      <div class="demo-description__header">
+        <a
+          href="https://www.yworks.com/products/yfiles"
+          class="demo-description__logo"
+          title="Visit yFiles product details"
+          target="_blank"
+        ></a>
+      </div>
+      <div class="demo-description__toggle-button" title="Toggle description"></div>
+      <div class="demo-description__play-button">Start here</div>
+
+      <div class="demo-description__content">
+        <h1>Transitivity Demo</h1>
+
+        <div>
+          <p>
+            Transitivity algorithms are heavily applied to graphs in order to answer reachability
+            questions such as <em>"Is it possible to reach node x from y?"</em>. Common application
+            fields are social networks, dependency graphs, bioinformatics, citation graphs or
+            criminal networks in which possible relations between two entities have to be quickly
+            identified and investigated.
+          </p>
+        </div>
+
+        <h2>Algorithms</h2>
+        <p>
+          The user can select one of the available algorithms from the algorithms' combo box.
+          Selecting the <em>Original Graph</em> will bring the graph to its original state without
+          the transitive edges.
+        </p>
+
+        <h3>Transitive Closure</h3>
+        <p>
+          Transitivity Closure is applied in order to answer the question whether there exists a
+          directed path between two nodes. The algorithm adds an edge to the graph for each pair of
+          nodes, that are not direct neighbors, but connected by a path in the graph. The transitive
+          edges are visualized in red color.
+        </p>
+        <h3>Transitive Reduction</h3>
+        <p>
+          Transitivity Reduction is the reverse operation to transitive closure which removes edges
+          between any two nodes if there exists another path that connects them. This means that in
+          the end, the graph remains with as few edges as possible but has the same reachability
+          relation as before. The user can choose to show or hide transitive edges using the
+          <img src="../../resources/icons/star-16.svg" style="vertical-align: text-top" />-Button of
+          the toolbar.
+        </p>
+
+        <h2>Graph Information</h2>
+        <table id="graph-information" class="table">
+          <tbody>
+            <tr class="bottom">
+              <td><b>Package Name:</b></td>
+              <td class="header"></td>
+            </tr>
+            <tr>
+              <td><b>Number of Dependents:</b></td>
+              <td></td>
+            </tr>
+            <tr class="bottom">
+              <td><b>Number of Dependencies:</b></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><b>Current Number of Nodes:</b></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td><b>Current Number of Edges:</b></td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </aside>
+    <div class="demo-page__main">
+      <div class="demo-main__graph-component">
+        <div id="graphComponent"></div>
+      </div>
+
+      <aside class="demo-main__sidebar">
+        <div class="demo-sidebar__content">
+          <h2>Sample Graph</h2>
+          <p>
+            This demo shows how transitive closure and reduction algorithms of yFiles can be applied
+            to a given graph. The sample graph represents the
+            <em>yfiles for HTML modules</em> dependencies graph, giving an overview of the
+            dependencies between the different yFiles for HTML
+            <a href="https://docs.yworks.com/yfileshtml/#/dguide/yfiles-modules#es-modules" target="_blank">modules</a>. The user can select a node and
+            investigate its dependents and dependencies.
+          </p>
+        </div>
+      </aside>
+    </div>
+    <script type="module" crossorigin="anonymous" src="TransitivityDemo.ts" async></script>
+  </body>
+</html>

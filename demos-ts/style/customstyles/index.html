@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+
+<!-- ////////////////////////////////////////////////////////////////////////
+     // @license
+     // This demo file is part of yFiles for HTML 2.6.0.4.
+     // Copyright (c) 2000-2024 by yWorks GmbH, Vor dem Kreuzberg 28,
+     // 72070 Tuebingen, Germany. All rights reserved.
+     //
+     // yFiles demo files exhibit yFiles for HTML functionalities. Any redistribution
+     // of demo files in source code or binary form, with or without
+     // modification, is not permitted.
+     //
+     // Owners of a valid software license for a yFiles for HTML version that this
+     // demo is shipped with are allowed to use the demo source code as basis
+     // for their own yFiles for HTML powered applications. Use of such programs is
+     // governed by the rights and conditions as set out in the yFiles for HTML
+     // license agreement.
+     //
+     // THIS SOFTWARE IS PROVIDED ''AS IS'' AND ANY EXPRESS OR IMPLIED
+     // WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+     // MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN
+     // NO EVENT SHALL yWorks BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+     // SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+     // TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+     // PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+     // LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+     // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+     // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+     //
+     ////////////////////////////////////////////////////////////////////////-->
+
+    <title>Custom Styles Demo [yFiles for HTML]</title>
+    <script type="module" src="../../resources/demo-page-init.ts" async></script>
+
+    <link rel="stylesheet" href="../../resources/style/demo.css" />
+
+    <link rel="stylesheet" href="./resources/styles.css" />
+
+    <style>
+      .node-color {
+        fill: #76b041;
+        stroke: #2f461a;
+        stroke-width: 2px;
+      }
+
+      .edge-color {
+        stroke: #2f461a;
+        stroke-width: 2px;
+      }
+
+      .edge-color-arrow {
+        fill: #0b7189;
+        stroke: #0b7189;
+      }
+    </style>
+    <script src="../../resources/filesystem-warning.js"></script>
+  </head>
+  <body>
+    <header class="demo-header">
+      <a
+        href="https://www.yworks.com/products/yfiles"
+        class="demo-header__y-logo"
+        title="Visit yFiles product details"
+        target="_blank"
+      ></a>
+      <div class="demo-header__breadcrumb-wrapper">
+        <a href="https://www.yworks.com/products/yfiles">yFiles for HTML</a>
+        <a href="../../README.html">Demos</a>
+
+        <span>Custom Styles</span>
+        <a href="../../README.html" class="demo-header__mobile-back">yFiles Demos</a>
+      </div>
+      <div class="demo-header__right">
+        <show-source-button></show-source-button>
+        <fullscreen-button></fullscreen-button>
+      </div>
+    </header>
+
+    <div class="demo-page__toolbar">
+      <button data-command="INCREASE_ZOOM"></button>
+      <button data-command="ZOOM_ORIGINAL"></button>
+      <button data-command="DECREASE_ZOOM"></button>
+      <button data-command="FIT_GRAPH_BOUNDS"></button>
+
+      <span class="demo-separator"></span>
+
+      <select id="sample-select--toolbar"></select>
+
+      <span class="demo-separator"></span>
+
+      <button id="modify-colors-button" title="Modify Colors" class="labeled">Modify Colors</button>
+
+      <span class="demo-separator"></span>
+
+      <button title="Save Sample 2 to GraphML file" class="labeled" id="save-button">
+        Save Sample 2
+      </button>
+    </div>
+    <aside class="demo-page__description">
+      <div class="demo-description__header">
+        <a
+          href="https://www.yworks.com/products/yfiles"
+          class="demo-description__logo"
+          title="Visit yFiles product details"
+          target="_blank"
+        ></a>
+      </div>
+      <div class="demo-description__toggle-button" title="Toggle description"></div>
+      <div class="demo-description__play-button">Start here</div>
+
+      <div class="demo-description__content">
+        <h1>Custom Styles Demo</h1>
+
+        <p>
+          This demo shows how to create custom styles for nodes, edges, labels, ports, and edge
+          arrows. Styles can use all the powerful visualisation features of Scalable Vector Graphics
+          (SVG).
+        </p>
+
+        <p>Two samples are offered, each using a different set of custom style implementations.</p>
+
+        <h2>Samples</h2>
+        <div id="sample-selection--sidebar" class="hide-before-loaded">
+          <select id="sample-select--sidebar"></select>
+        </div>
+
+        <div id="sample-description-container">
+          <div id="sample-1-description">
+            <h2>Description</h2>
+            <p>Uses the style implementations</p>
+            <ul>
+              <li><em>Sample1NodeStyle</em></li>
+              <li><em>Sample1EdgeStyle</em></li>
+              <li><em>Sample1LabelStyle</em></li>
+              <li><em>Sample1GroupNodeStyle</em></li>
+              <li><em>Sample1PortStyle</em></li>
+              <li><em>Sample1Arrow</em></li>
+            </ul>
+            <h2>Things to try</h2>
+            <ul>
+              <li>Create new nodes in the canvas and inspect their styles in code.</li>
+              <li>
+                Create edges between nodes and inspect the custom style of the edge and the arrows
+                in code.
+              </li>
+              <li>
+                Click "Modify Colors" to change the color of the nodes and indirectly the color of
+                the outgoing edges.
+              </li>
+              <li>
+                Note that the labels look like nodes connected via an edge, however they are
+                ordinary labels that reuse the edge style for drawing a node to label connection.
+                Select and drag a label to move them to different locations.
+              </li>
+              <li>
+                Also note that the label style depends on the current zoom. Zooming closer to the
+                label reveals an edit label button that, when clicked, starts label text editing.
+              </li>
+              <li>
+                Selecting an edge changes its color - the traditional selection indicator is not
+                rendered.
+              </li>
+            </ul>
+          </div>
+          <div id="sample-2-description" class="hidden">
+            <h2>Description</h2>
+            <p>Uses the style implementations</p>
+            <ul>
+              <li><em>Sample2NodeStyle</em></li>
+              <li><em>Sample2EdgeStyle</em></li>
+              <li><em>Sample2GroupNodeStyle</em></li>
+              <li><em>Sample2Arrow</em></li>
+            </ul>
+            <h2>Things to try</h2>
+            <ul>
+              <li>Create new nodes in the canvas and inspect their styles in code.</li>
+              <li>
+                Create edges between nodes and inspect the custom style of the edge and the arrows
+                in code.
+              </li>
+              <li>
+                The styles offer a <em>cssClass</em> property so that the items may easily be styled
+                via CSS. See the rules (e.g. .node-color) defined in the <em>index.html</em>.
+              </li>
+              <li>
+                Save the sample to graphml by clicking the button in the toolbar. Inspect the markup
+                extension implementations necessary to support graphml (e.g.
+                <em>DemoNodeStyleExtension</em>).
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </aside>
+    <div class="demo-page__main">
+      <div class="demo-main__graph-component">
+        <div id="graphComponent"></div>
+      </div>
+    </div>
+    <script type="module" crossorigin="anonymous" src="CustomStyleDemo.ts" async></script>
+  </body>
+</html>

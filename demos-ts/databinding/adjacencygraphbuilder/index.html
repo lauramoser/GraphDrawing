@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+
+<!-- ////////////////////////////////////////////////////////////////////////
+     // @license
+     // This demo file is part of yFiles for HTML 2.6.0.4.
+     // Copyright (c) 2000-2024 by yWorks GmbH, Vor dem Kreuzberg 28,
+     // 72070 Tuebingen, Germany. All rights reserved.
+     //
+     // yFiles demo files exhibit yFiles for HTML functionalities. Any redistribution
+     // of demo files in source code or binary form, with or without
+     // modification, is not permitted.
+     //
+     // Owners of a valid software license for a yFiles for HTML version that this
+     // demo is shipped with are allowed to use the demo source code as basis
+     // for their own yFiles for HTML powered applications. Use of such programs is
+     // governed by the rights and conditions as set out in the yFiles for HTML
+     // license agreement.
+     //
+     // THIS SOFTWARE IS PROVIDED ''AS IS'' AND ANY EXPRESS OR IMPLIED
+     // WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+     // MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN
+     // NO EVENT SHALL yWorks BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+     // SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+     // TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+     // PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+     // LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+     // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+     // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+     //
+     ////////////////////////////////////////////////////////////////////////-->
+
+    <title>Adjacency Graph Builder Demo [yFiles for HTML]</title>
+    <script type="module" src="../../resources/demo-page-init.ts" async></script>
+
+    <link rel="stylesheet" href="../../resources/style/demo.css" />
+
+    <style>
+      #schemaGraphComponent {
+        background: white;
+        box-shadow: rgba(0, 0, 0, 0.3) 0 9px 10px -7px inset;
+        position: absolute;
+        top: 130px;
+        bottom: 0;
+        left: 10px;
+        right: 10px;
+      }
+
+      #editSourceDialogModal {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 2000;
+        background: rgba(0, 0, 0, 0.3);
+        overflow: auto;
+      }
+
+      #editSourceDialog {
+        display: flex;
+        flex-direction: column;
+        padding: 20px;
+        position: absolute;
+        top: 50px;
+        left: 25%;
+        right: 25%;
+        z-index: 2001;
+        background: #f9f9f9;
+        border: 1px solid #ccc;
+        box-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
+      }
+
+      @media (max-width: 700px) {
+        #editSourceDialog {
+          left: 5px;
+          right: 5px;
+        }
+      }
+
+      #editSourceDialog > * {
+        margin: 10px 0;
+      }
+
+      #editSourceDialog h2 {
+        margin: 10px auto;
+      }
+
+      #editSourceDialog textarea {
+        width: 100%;
+        height: 150px;
+      }
+
+      #editSourceDialog .CodeMirror {
+        height: 190px;
+      }
+
+      #editSourceDialog input[type='text'] {
+        max-width: 100%;
+        width: 300px;
+      }
+
+      .buttonsContainer {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        width: 100%;
+      }
+
+      button.acceptButton {
+        margin-right: 0;
+      }
+
+      .demo-context-menu {
+        z-index: 100;
+      }
+
+      #editSourceDialog button {
+        margin-right: 11px;
+      }
+    </style>
+    <script src="../../resources/filesystem-warning.js"></script>
+  </head>
+  <body>
+    <header class="demo-header">
+      <a
+        href="https://www.yworks.com/products/yfiles"
+        class="demo-header__y-logo"
+        title="Visit yFiles product details"
+        target="_blank"
+      ></a>
+      <div class="demo-header__breadcrumb-wrapper">
+        <a href="https://www.yworks.com/products/yfiles">yFiles for HTML</a>
+        <a href="../../README.html">Demos</a>
+
+        <span>Adjacency Graph Builder</span>
+        <a href="../../README.html" class="demo-header__mobile-back">yFiles Demos</a>
+      </div>
+      <div class="demo-header__right">
+        <show-source-button></show-source-button>
+        <fullscreen-button></fullscreen-button>
+      </div>
+    </header>
+
+    <div class="demo-page__toolbar">
+      <button data-command="INCREASE_ZOOM"></button>
+      <button data-command="ZOOM_ORIGINAL"></button>
+      <button data-command="DECREASE_ZOOM"></button>
+      <button data-command="FIT_GRAPH_BOUNDS"></button>
+      <span class="demo-separator"></span>
+
+      <!-- combo-box for sample data -->
+      <select id="samples-combo-box"></select>
+    </div>
+    <aside class="demo-page__description">
+      <div class="demo-description__header">
+        <a
+          href="https://www.yworks.com/products/yfiles"
+          class="demo-description__logo"
+          title="Visit yFiles product details"
+          target="_blank"
+        ></a>
+      </div>
+      <div class="demo-description__toggle-button" title="Toggle description"></div>
+      <div class="demo-description__play-button">Start here</div>
+
+      <div class="demo-description__content">
+        <h1>Adjacency Graph Builder Demo</h1>
+
+        <p>
+          This demo interactively builds and modifies a graph from <b>JSON</b> business data using
+          class <a href="https://docs.yworks.com/yfileshtml/#/api/AdjacencyGraphBuilder" target="_blank">AdjacencyGraphBuilder</a>.
+        </p>
+
+        <p>
+          See the the Developer's Guide section on the
+          <a href="https://docs.yworks.com/yfileshtml/#/dguide/graph_builder-AdjacencyGraphBuilder" target="_blank">AdjacencyGraphBuilder</a>
+          for an in-depth explanation of the relevant concepts.
+        </p>
+
+        <p>
+          The demo allows to define nodes sources and edges bindings using the schema graph
+          component on the right. The schema nodes represent nodes sources. The schema edges
+          represent the edge bindings between the nodes sources. The edge arrows indicate the type
+          of the edge. An arrow pointing away from a node indicates outgoing edges to successor
+          nodes. An arrow pointing towards a node indicates incoming edges from predecessor nodes.
+        </p>
+
+        <h2>Things to Try</h2>
+        <ul>
+          <li>Select a sample in the combo box and inspect its data and sources on the right.</li>
+          <li>
+            Double click on a node in the schema graph and edit the schema nodes' business data.
+          </li>
+          <li>
+            Octagonal schema nodes represent nodes sources that provide business data for the result
+            graph structure.
+          </li>
+          <li>
+            Circular schema nodes represent nodes sources without own data, that receive data via
+            the edge bindings.
+          </li>
+          <li>The schema graph edges and labels define the result graph edge bindings.</li>
+          <li>Click on an edge or its label to edit the edge binding.</li>
+          <li>Right-click on a schema edge to invert its neighbor type via its context menu.</li>
+          <li>
+            Enter an empty edge label content to remove the edge and thus the result graph edge
+            binding.
+          </li>
+          <li>Click into the empty space of the schema graph to create a new schema graph node.</li>
+          <li>
+            Drag from an existing schema graph node and drop on the empty space to create a new node
+            connected to it.
+          </li>
+          <li>Connect existing schema graph nodes by dragging and dropping between them.</li>
+          <li>Build a graph from your own data and bindings.</li>
+        </ul>
+
+        <p>
+          <b>Note:</b> This demo shows only parts of the <a href="https://docs.yworks.com/yfileshtml/#/api/AdjacencyGraphBuilder" target="_blank">AdjacencyGraphBuilder</a> API.
+          In addition to the functionality available in this demo, the AdjacencyGraphBuilder allows
+          to reference nodes by their ids and edges may be defined by their own edge data items.
+        </p>
+
+        <p>
+          Since this demo evaluates the complete data source texts every time a source is edited,
+          <em>Update Graph</em> works as expected only for node data items of primitive type or if
+          the node id binding resolves to primitive ids. Note that this restriction applies only to
+          the demo, not the class <a href="https://docs.yworks.com/yfileshtml/#/api/AdjacencyGraphBuilder" target="_blank">AdjacencyGraphBuilder</a>.
+        </p>
+      </div>
+    </aside>
+    <div class="demo-page__main">
+      <div class="demo-main__graph-component">
+        <div id="graphComponent"></div>
+      </div>
+      <aside class="demo-main__sidebar">
+        <div class="demo-properties__settings" style="margin: 10px; height: 100%">
+          <h2>Graph Builder Settings</h2>
+
+          <div class="demo-form-block">
+            <button title="Build a new graph" id="build-graph-button">New Graph</button>
+            <button title="Update the current graph" id="update-graph-button">Update Graph</button>
+          </div>
+          <div id="schemaGraphComponent"></div>
+        </div>
+      </aside>
+    </div>
+
+    <div id="editSourceDialogModal" style="display: none">
+      <div id="editSourceDialog" class="demo-properties__settings"></div>
+    </div>
+
+    <script type="module" crossorigin="anonymous" src="AdjacencyGraphBuilderDemo.ts" async></script>
+  </body>
+</html>

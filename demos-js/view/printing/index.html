@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+
+<!-- ////////////////////////////////////////////////////////////////////////
+     // @license
+     // This demo file is part of yFiles for HTML 2.6.0.4.
+     // Copyright (c) 2000-2024 by yWorks GmbH, Vor dem Kreuzberg 28,
+     // 72070 Tuebingen, Germany. All rights reserved.
+     //
+     // yFiles demo files exhibit yFiles for HTML functionalities. Any redistribution
+     // of demo files in source code or binary form, with or without
+     // modification, is not permitted.
+     //
+     // Owners of a valid software license for a yFiles for HTML version that this
+     // demo is shipped with are allowed to use the demo source code as basis
+     // for their own yFiles for HTML powered applications. Use of such programs is
+     // governed by the rights and conditions as set out in the yFiles for HTML
+     // license agreement.
+     //
+     // THIS SOFTWARE IS PROVIDED ''AS IS'' AND ANY EXPRESS OR IMPLIED
+     // WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+     // MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN
+     // NO EVENT SHALL yWorks BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+     // SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+     // TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+     // PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+     // LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+     // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+     // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+     //
+     ////////////////////////////////////////////////////////////////////////-->
+
+    <title>Printing Demo [yFiles for HTML]</title>
+    <script type="module" src="../../resources/demo-page-init.js" async></script>
+
+    <link rel="stylesheet" href="../../resources/style/demo.css" />
+    <link rel="stylesheet" href="./option-panel/option-panel.css" />
+
+    <script src="../../resources/filesystem-warning.js"></script>
+
+    <style>
+      /* Load custom fonts for the custom-fonts sample graph. */
+      @import url('https://fonts.googleapis.com/css?family=Prata');
+      @import url('https://fonts.googleapis.com/css?family=Kosugi');
+
+      /*
+      * Custom fonts need to be loaded before their usage in the GraphComponent,
+      * otherwise the initial measurement of the font may use a system font.
+      * We pre-load the fonts by applying them to a hidden dummy element.
+      */
+      .font-preload {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 1px;
+        height: 1px;
+        opacity: 0;
+        pointer-events: none;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="demo-header">
+      <a
+        href="https://www.yworks.com/products/yfiles"
+        class="demo-header__y-logo"
+        title="Visit yFiles product details"
+        target="_blank"
+      ></a>
+      <div class="demo-header__breadcrumb-wrapper">
+        <a href="https://www.yworks.com/products/yfiles">yFiles for HTML</a>
+        <a href="../../README.html">Demos</a>
+
+        <span>Printing</span>
+        <a href="../../README.html" class="demo-header__mobile-back">yFiles Demos</a>
+      </div>
+      <div class="demo-header__right">
+        <show-source-button></show-source-button>
+        <fullscreen-button></fullscreen-button>
+      </div>
+    </header>
+
+    <div class="demo-page__toolbar">
+      <button data-command="INCREASE_ZOOM"></button>
+      <button data-command="ZOOM_ORIGINAL"></button>
+      <button data-command="DECREASE_ZOOM"></button>
+      <button data-command="FIT_GRAPH_BOUNDS"></button>
+    </div>
+    <aside class="demo-page__description">
+      <div class="demo-description__header">
+        <a
+          href="https://www.yworks.com/products/yfiles"
+          class="demo-description__logo"
+          title="Visit yFiles product details"
+          target="_blank"
+        ></a>
+      </div>
+      <div class="demo-description__toggle-button" title="Toggle description"></div>
+      <div class="demo-description__play-button">Start here</div>
+
+      <div class="demo-description__content">
+        <h1>Printing Demo</h1>
+
+        <p>
+          This demo shows how to export the whole diagram or a part of it to an SVG on the client
+          and how to print this graphic.
+        </p>
+
+        <h2>Things to Try</h2>
+        <ul>
+          <li>Resize and move the export rectangle to control the region which will be printed.</li>
+          <li>
+            Press the <code>Print</code> button to open a new browser window with the exported SVG
+            and trigger the printing.
+          </li>
+          <li>
+            Enable <code>Print Rectangle Contents</code> to print only the rectangle's region
+            instead of the whole graph. Resize and move rectangle to control the region which will
+            be printed.
+          </li>
+          <li>Experiment with the settings to observe how changes affect the results.</li>
+        </ul>
+      </div>
+    </aside>
+    <div class="demo-page__main">
+      <div class="font-preload">
+        <span style="font-family: Prata, sans-serif">Кирилица</span>
+        <span style="font-family: Kosugi, sans-serif">平仮名</span>
+      </div>
+      <div class="demo-main__graph-component">
+        <div id="graphComponent"></div>
+      </div>
+      <aside class="demo-main__sidebar">
+        <div class="demo-sidebar__content">
+          <h2>Printing Options</h2>
+
+          <div class="demo-properties__settings">
+            <div class="settings-grid">
+              <p class="settings-legend1">General</p>
+              <label for="useRect" class="settings-label-row1">Print Rectangle Contents</label>
+              <input class="settings-editor-row1" id="useRect" type="checkbox" name="useRect" />
+              <label for="scale" class="settings-label-row2">Scale</label>
+              <input
+                class="settings-editor-row2"
+                id="scale"
+                name="scale"
+                type="number"
+                min="0.1"
+                max="200.0"
+                step="0.1"
+                value="1.0"
+              />
+              <label for="margin" class="settings-label-row3">Margin</label>
+              <input
+                class="settings-editor-row3"
+                id="margin"
+                name="margin"
+                type="number"
+                min="0"
+                max="100"
+                value="5.0"
+              />
+              <p class="settings-legend2">Tiles</p>
+              <label for="useTilePrinting" class="settings-label-row4">Tiled Printing</label>
+              <input
+                class="settings-editor-row4"
+                id="useTilePrinting"
+                data-name="inputUseTilePrinting"
+                type="checkbox"
+                name="useTilePrinting"
+              />
+              <label for="tileWidth" class="settings-label-row5">Tile Width</label>
+              <input
+                class="settings-editor-row5"
+                id="tileWidth"
+                data-name="inputTileWidth"
+                name="tileWidth"
+                type="number"
+                min="10"
+                value="595"
+              />
+              <label for="tileHeight" class="settings-label-row6">Tile Height</label>
+              <input
+                class="settings-editor-row6"
+                id="tileHeight"
+                data-name="inputTileHeight"
+                name="tileHeight"
+                type="number"
+                min="10"
+                value="842"
+              />
+              <button class="settings-editor-row7 flat-button" id="print-button">Print</button>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+    <script type="module" crossorigin="anonymous" src="PrintingDemo.js" async></script>
+  </body>
+</html>

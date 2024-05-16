@@ -1,0 +1,120 @@
+/****************************************************************************
+ ** @license
+ ** This demo file is part of yFiles for HTML 2.6.0.4.
+ ** Copyright (c) 2000-2024 by yWorks GmbH, Vor dem Kreuzberg 28,
+ ** 72070 Tuebingen, Germany. All rights reserved.
+ **
+ ** yFiles demo files exhibit yFiles for HTML functionalities. Any redistribution
+ ** of demo files in source code or binary form, with or without
+ ** modification, is not permitted.
+ **
+ ** Owners of a valid software license for a yFiles for HTML version that this
+ ** demo is shipped with are allowed to use the demo source code as basis
+ ** for their own yFiles for HTML powered applications. Use of such programs is
+ ** governed by the rights and conditions as set out in the yFiles for HTML
+ ** license agreement.
+ **
+ ** THIS SOFTWARE IS PROVIDED ''AS IS'' AND ANY EXPRESS OR IMPLIED
+ ** WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ ** MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN
+ ** NO EVENT SHALL yWorks BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ ** SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+ ** TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ ** PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+ ** LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ ** NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ ** SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **
+ ***************************************************************************/
+.graph-component-container {
+  position: relative;
+  display: flex;
+  flex: 1;
+  height: 100%;
+  flex-direction: column;
+}
+
+#graphComponent {
+  flex: 1;
+}
+
+#timeline-component {
+  height: 70px;
+}
+
+#timeline-component canvas {
+  height: 100%;
+  width: 100%;
+}
+
+#task-component {
+  position: relative;
+  width: 150px;
+  overflow: hidden;
+}
+
+.task-list {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+
+.task-list__task {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  color: white;
+  padding: 0.7rem;
+  border-bottom: 1px solid white;
+}
+
+.activity-node {
+  transition: color 0.3s ease;
+}
+
+.info {
+  position: absolute;
+  min-width: 60px;
+  padding: 0 5px;
+  height: 25px;
+  background-color: white;
+  border-radius: 8px;
+  color: #444;
+  line-height: 25px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.node-info {
+  position: absolute;
+  padding: 15px;
+  background-color: white;
+  border-radius: 8px;
+}
+
+.node-info__name {
+  font-weight: bold;
+  font-size: 120%;
+  margin-bottom: 1rem;
+}
+
+.node-info__content {
+  display: table;
+  width: 100%;
+  padding-bottom: 1rem;
+}
+
+.node-info__row {
+  display: table-row;
+}
+
+.node-info__cell {
+  display: table-cell;
+  padding: 5px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.node-info__cell:last-child {
+  padding-left: 1rem;
+}

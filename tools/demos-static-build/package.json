@@ -1,0 +1,18 @@
+{
+  "name": "server-deployment-for-yfiles-for-html",
+  "version": "26.0.4",
+  "author": "yWorks GmbH <yfileshtml@yworks.com>",
+  "license": "https://www.yworks.com/products/yfiles-for-html/sla",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "vite build --config vite.config.ts"
+  },
+  "devDependencies": {
+    "@rollup/plugin-replace": "^5.0.0",
+    "fast-glob": "^3.3.0",
+    "rollup-plugin-copy": "^3.5.0",
+    "typescript": "~5.3.3",
+    "vite": "^5.2.0"
+  }
+}

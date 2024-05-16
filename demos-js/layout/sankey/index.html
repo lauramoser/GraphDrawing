@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+
+<!-- ////////////////////////////////////////////////////////////////////////
+     // @license
+     // This demo file is part of yFiles for HTML 2.6.0.4.
+     // Copyright (c) 2000-2024 by yWorks GmbH, Vor dem Kreuzberg 28,
+     // 72070 Tuebingen, Germany. All rights reserved.
+     //
+     // yFiles demo files exhibit yFiles for HTML functionalities. Any redistribution
+     // of demo files in source code or binary form, with or without
+     // modification, is not permitted.
+     //
+     // Owners of a valid software license for a yFiles for HTML version that this
+     // demo is shipped with are allowed to use the demo source code as basis
+     // for their own yFiles for HTML powered applications. Use of such programs is
+     // governed by the rights and conditions as set out in the yFiles for HTML
+     // license agreement.
+     //
+     // THIS SOFTWARE IS PROVIDED ''AS IS'' AND ANY EXPRESS OR IMPLIED
+     // WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+     // MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN
+     // NO EVENT SHALL yWorks BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+     // SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+     // TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+     // PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+     // LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+     // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+     // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+     //
+     ////////////////////////////////////////////////////////////////////////-->
+
+    <title>Sankey Demo [yFiles for HTML]</title>
+    <script type="module" src="../../resources/demo-page-init.js" async></script>
+
+    <link rel="stylesheet" href="../../resources/style/demo.css" />
+    <link rel="stylesheet" href="../../view/contextualtoolbar/resources/contextual-toolbar.css" />
+
+    <script src="../../resources/filesystem-warning.js"></script>
+
+    <style>
+      .picker-container button {
+        width: 25px;
+        height: 25px;
+        margin: 2px;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="demo-header">
+      <a
+        href="https://www.yworks.com/products/yfiles"
+        class="demo-header__y-logo"
+        title="Visit yFiles product details"
+        target="_blank"
+      ></a>
+      <div class="demo-header__breadcrumb-wrapper">
+        <a href="https://www.yworks.com/products/yfiles">yFiles for HTML</a>
+        <a href="../../README.html">Demos</a>
+
+        <span>Sankey Diagram</span>
+        <a href="../../README.html" class="demo-header__mobile-back">yFiles Demos</a>
+      </div>
+      <div class="demo-header__right">
+        <show-source-button></show-source-button>
+        <fullscreen-button></fullscreen-button>
+      </div>
+    </header>
+
+    <div class="demo-page__toolbar">
+      <button data-command="INCREASE_ZOOM"></button>
+      <button data-command="ZOOM_ORIGINAL"></button>
+      <button data-command="DECREASE_ZOOM"></button>
+      <button data-command="FIT_GRAPH_BOUNDS"></button>
+
+      <span class="demo-separator"></span>
+
+      <button data-command="UNDO"></button>
+      <button data-command="REDO"></button>
+
+      <span class="demo-separator"></span>
+
+      <label>
+        Nodes determine the color of
+        <select id="colorDirection">
+          <option>outgoing</option>
+          <option>incoming</option>
+        </select>
+        edges
+      </label>
+    </div>
+    <aside class="demo-page__description">
+      <div class="demo-description__header">
+        <a
+          href="https://www.yworks.com/products/yfiles"
+          class="demo-description__logo"
+          title="Visit yFiles product details"
+          target="_blank"
+        ></a>
+      </div>
+      <div class="demo-description__toggle-button" title="Toggle description"></div>
+      <div class="demo-description__play-button">Start here</div>
+
+      <div class="demo-description__content">
+        <h1>Sankey Demo</h1>
+
+        <p>
+          Sankey diagrams are used for visualizing flow information in which the thickness of the
+          edges is proportional to the flow quantity. Such diagrams can be produced by means of the
+          hierarchic layout algorithm (see <a href="https://docs.yworks.com/yfileshtml/#/api/HierarchicLayout" target="_blank">HierarchicLayout</a>).
+        </p>
+        <p>
+          The example diagram shows a voters' migration flow between different political parties
+          over the course of four elections (each column represents an election). The flow is
+          depicted from left to right.
+        </p>
+        <p>
+          The political parties in each layer (excluding the non-voter) are sorted by their voters
+          in each election. The non-voter is always placed at the bottom each layer.
+        </p>
+
+        <h2>Things to Try</h2>
+        <ul>
+          <li>
+            Change the number displayed in each edge label to modify the thickness of a particular
+            edge.
+          </li>
+          <li>
+            Move a node along its layer to run a new layout that will consider the new layer
+            ordering.
+          </li>
+          <li>Click on a node to modify its color through a popup menu.</li>
+          <li>
+            Use the dropdown to switch how the colors of edges are determined. Selecting the
+            'outgoing' setting, it is easier to see where edges come from while selecting the
+            'incoming' setting, it is easier to see where edges go to.
+          </li>
+          <li>Hover over an edge to highlight the edge and its associated labels.</li>
+          <li>Hover over an edge label to highlight the label and its associated edge.</li>
+        </ul>
+      </div>
+    </aside>
+    <div class="demo-page__main">
+      <div class="demo-main__graph-component">
+        <div id="graphComponent">
+          <div id="contextualToolbar" class="contextual-toolbar" tabindex="0">
+            <div id="toolbar-ui">
+              <input
+                type="checkbox"
+                id="color-picker"
+                class="toggle-button"
+                data-container-id="color-picker-colors"
+              />
+              <label id="color-picker-label" for="color-picker" title="Select node color">
+                <span class="fa-layers fa-fw">
+                  <i class="fa-solid fa-paint-brush"></i>
+                  <i
+                    class="fa-solid fa-sm fa-caret-right"
+                    data-fa-transform="right-14 down-12 rotate-45"
+                  ></i>
+                </span>
+              </label>
+            </div>
+
+            <div id="color-picker-colors" class="picker-container color-picker"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type="module" crossorigin="anonymous" src="SankeyDemo.js" async></script>
+  </body>
+</html>

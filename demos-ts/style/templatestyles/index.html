@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+
+<!-- ////////////////////////////////////////////////////////////////////////
+     // @license
+     // This demo file is part of yFiles for HTML 2.6.0.4.
+     // Copyright (c) 2000-2024 by yWorks GmbH, Vor dem Kreuzberg 28,
+     // 72070 Tuebingen, Germany. All rights reserved.
+     //
+     // yFiles demo files exhibit yFiles for HTML functionalities. Any redistribution
+     // of demo files in source code or binary form, with or without
+     // modification, is not permitted.
+     //
+     // Owners of a valid software license for a yFiles for HTML version that this
+     // demo is shipped with are allowed to use the demo source code as basis
+     // for their own yFiles for HTML powered applications. Use of such programs is
+     // governed by the rights and conditions as set out in the yFiles for HTML
+     // license agreement.
+     //
+     // THIS SOFTWARE IS PROVIDED ''AS IS'' AND ANY EXPRESS OR IMPLIED
+     // WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+     // MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN
+     // NO EVENT SHALL yWorks BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+     // SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+     // TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+     // PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+     // LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+     // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+     // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+     //
+     ////////////////////////////////////////////////////////////////////////-->
+
+    <title>Template Styles Demo [yFiles for HTML]</title>
+    <script type="module" src="../../resources/demo-page-init.ts" async></script>
+
+    <link rel="stylesheet" href="../../resources/style/demo.css" />
+    <link rel="stylesheet" href="./resources/styles.css" />
+
+    <script src="../../resources/filesystem-warning.js"></script>
+  </head>
+  <body>
+    <header class="demo-header">
+      <a
+        href="https://www.yworks.com/products/yfiles"
+        class="demo-header__y-logo"
+        title="Visit yFiles product details"
+        target="_blank"
+      ></a>
+      <div class="demo-header__breadcrumb-wrapper">
+        <a href="https://www.yworks.com/products/yfiles">yFiles for HTML</a>
+        <a href="../../README.html">Demos</a>
+
+        <span>Template Styles</span>
+        <a href="../../README.html" class="demo-header__mobile-back">yFiles Demos</a>
+      </div>
+      <div class="demo-header__right">
+        <show-source-button></show-source-button>
+        <fullscreen-button></fullscreen-button>
+      </div>
+    </header>
+
+    <div class="demo-page__toolbar">
+      <button data-command="INCREASE_ZOOM"></button>
+      <button data-command="ZOOM_ORIGINAL"></button>
+      <button data-command="DECREASE_ZOOM"></button>
+      <button data-command="FIT_GRAPH_BOUNDS"></button>
+    </div>
+    <aside class="demo-page__description">
+      <div class="demo-description__header">
+        <a
+          href="https://www.yworks.com/products/yfiles"
+          class="demo-description__logo"
+          title="Visit yFiles product details"
+          target="_blank"
+        ></a>
+      </div>
+      <div class="demo-description__toggle-button" title="Toggle description"></div>
+      <div class="demo-description__play-button">Start here</div>
+
+      <div class="demo-description__content">
+        <h1>Template Styles Demo</h1>
+
+        <p>
+          This demo shows how to create SVG templates for nodes, labels and ports. It also shows how
+          to customize various aspects of template styles.
+        </p>
+
+        <h3>Template Styles</h3>
+        <p>
+          Template Styles use SVG snippets ('templates'), defined in either HTML or a string
+          argument, to create the visualization for nodes, labels, ports or table stripes.
+        </p>
+
+        <h3>Data Binding</h3>
+        <p>
+          SVG attributes can be bound to graph item data or to contextual information, using a
+          special binding syntax, e.g. <br />
+          <code>fill="{Binding myColor}"</code> <br />
+          The bound values can be manipulated and processed using converters. This makes it possible
+          to set visual attributes based on the item data, e.g. you can link the background color of
+          an employee node to the employee's business unit.
+        </p>
+        <h3>Template Bindings</h3>
+        <p>
+          The binding context gives you information about the current state, e.g. the zoom level,
+          the item size, the item's selection state, etc. Template bindings are written like this:
+          <br />
+          <code>width="{TemplateBinding width}"</code>
+          <br />
+        </p>
+
+        <h2>Related Demos</h2>
+        <ul>
+          <li>
+            <a href="../../style/string-template-node-style/" target="_blank">String Template Node Style Demo</a>
+          </li>
+          <li>
+            <a href="../../../demos-ts/style/vue-template-node-style/" target="_blank">Vue Template Node Style Demo</a>
+          </li>
+          <li>
+            <a href="../../style/react-template-node-style/" target="_blank">React JSX Component Style Demo</a>
+          </li>
+          <li>
+            <a href="../../style/lit-template-node-style/" target="_blank">Lit Template Node Style Demo</a>
+          </li>
+        </ul>
+      </div>
+    </aside>
+    <div class="demo-page__main">
+      <div class="demo-main__graph-component">
+        <div id="graphComponent"></div>
+      </div>
+      <aside class="demo-main__sidebar">
+        <div class="demo-sidebar__content">
+          <h2>Personal Data</h2>
+          <div style="width: 100%">
+            <div id="propertiesView">
+              <p>Select an employee in the organization chart to show his properties.</p>
+            </div>
+          </div>
+
+          <h2>Things to Try</h2>
+
+          <ul>
+            <li>Select a node and take a look at the Properties Panel to see the node details.</li>
+            <li>
+              Click the 'settings' button to edit the name and change the status using the dropdown
+              box. The changes immediately reflect in the node.
+            </li>
+            <li>
+              Take a look at the templates for nodes, labels and ports in <code>index.html</code>.
+            </li>
+            <li>
+              Take a look at method <code>initConverters()</code> in <code>TemplateStylesDemo</code>
+              to see how the data binding converters are initialized.
+            </li>
+            <li>
+              Take a look at method <code>configureStyles()</code> in
+              <code>TemplateStylesDemo</code> to see how the template styles are initialized.
+            </li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+    <script type="module" crossorigin="anonymous" src="TemplateStylesDemo.ts" async></script>
+  </body>
+</html>

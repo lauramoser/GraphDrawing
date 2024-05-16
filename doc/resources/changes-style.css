@@ -1,0 +1,8 @@
+code {
+  color: var(--color-changes-code);
+  background-color: transparent;
+  padding: 0;
+  border: 0;
+  font-family: Consolas, Monaco, monospace;
+  font-weight: 500;
+}

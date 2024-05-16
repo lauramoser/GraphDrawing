@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+
+<!-- ////////////////////////////////////////////////////////////////////////
+     // @license
+     // This demo file is part of yFiles for HTML 2.6.0.4.
+     // Copyright (c) 2000-2024 by yWorks GmbH, Vor dem Kreuzberg 28,
+     // 72070 Tuebingen, Germany. All rights reserved.
+     //
+     // yFiles demo files exhibit yFiles for HTML functionalities. Any redistribution
+     // of demo files in source code or binary form, with or without
+     // modification, is not permitted.
+     //
+     // Owners of a valid software license for a yFiles for HTML version that this
+     // demo is shipped with are allowed to use the demo source code as basis
+     // for their own yFiles for HTML powered applications. Use of such programs is
+     // governed by the rights and conditions as set out in the yFiles for HTML
+     // license agreement.
+     //
+     // THIS SOFTWARE IS PROVIDED ''AS IS'' AND ANY EXPRESS OR IMPLIED
+     // WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+     // MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN
+     // NO EVENT SHALL yWorks BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+     // SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+     // TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+     // PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+     // LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+     // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+     // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+     //
+     ////////////////////////////////////////////////////////////////////////-->
+
+    <title>Tree Map Demo [yFiles for HTML]</title>
+    <script type="module" src="../../resources/demo-page-init.js" async></script>
+
+    <link rel="stylesheet" href="../../resources/style/demo.css" />
+
+    <style>
+      #path {
+        float: right;
+        margin-right: 5px;
+      }
+
+      #apply-layout {
+        width: 100%;
+        margin-top: 30px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        font-weight: bold;
+        text-transform: UPPERCASE;
+        color: white;
+        background-color: #4caf50;
+        border-color: transparent;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+
+      #apply-layout:hover {
+        background-color: #67bb6a;
+      }
+
+      #apply-layout:active {
+        background-color: #4caf50;
+      }
+
+      /* a hidden container to measure text sizes */
+      #text-measure-container {
+        position: absolute;
+        visibility: hidden;
+        height: auto;
+        width: auto;
+        white-space: nowrap;
+        font-family: 'Arial', serif;
+      }
+    </style>
+    <script src="../../resources/filesystem-warning.js"></script>
+  </head>
+  <body>
+    <header class="demo-header">
+      <a
+        href="https://www.yworks.com/products/yfiles"
+        class="demo-header__y-logo"
+        title="Visit yFiles product details"
+        target="_blank"
+      ></a>
+      <div class="demo-header__breadcrumb-wrapper">
+        <a href="https://www.yworks.com/products/yfiles">yFiles for HTML</a>
+        <a href="../../README.html">Demos</a>
+
+        <span>Tree Map</span>
+        <a href="../../README.html" class="demo-header__mobile-back">yFiles Demos</a>
+      </div>
+      <div class="demo-header__right">
+        <show-source-button></show-source-button>
+        <fullscreen-button></fullscreen-button>
+      </div>
+    </header>
+
+    <!-- a hidden container to measure text sizes -->
+
+    <div class="demo-page__toolbar">
+      <button data-command="INCREASE_ZOOM"></button>
+      <button data-command="ZOOM_ORIGINAL"></button>
+      <button data-command="DECREASE_ZOOM"></button>
+      <button data-command="FIT_GRAPH_BOUNDS"></button>
+      <span class="demo-separator"></span>
+      <span id="path"></span>
+    </div>
+    <aside class="demo-page__description">
+      <div class="demo-description__header">
+        <a
+          href="https://www.yworks.com/products/yfiles"
+          class="demo-description__logo"
+          title="Visit yFiles product details"
+          target="_blank"
+        ></a>
+      </div>
+      <div class="demo-description__toggle-button" title="Toggle description"></div>
+      <div class="demo-description__play-button">Start here</div>
+
+      <div class="demo-description__content">
+        <h1>Tree Map Demo</h1>
+
+        <p>
+          Tree maps allow to visualize hierarchical data using nested rectangles, which in this case
+          are represented by graph nodes. The size of leaf nodes in a tree map is proportional to a
+          certain data value (i.e. weight).
+        </p>
+        <p>
+          The <a href="https://docs.yworks.com/yfileshtml/#/api/TreeMapLayout" target="_blank">TreeMapLayout</a> algorithm arranges the nodes according to their weights
+          and relations inside groups.
+        </p>
+
+        <h2>Application</h2>
+        <p>
+          A common application for tree maps is the visualization of the file structure on a hard
+          disk. This example shows a tree map of the source code directory of the
+          <em>yFiles for HTML</em> library. The node sizes are defined by the actual file size on
+          disk in bytes.
+        </p>
+        <h3>Navigate the file hierarchy</h3>
+        <p>
+          For less cluttered graphs, only the children and grandchildren of the current root are
+          visible.
+        </p>
+        <ul>
+          <li>
+            Move down one hierarchy level by clicking a group/folder. This node becomes the new root
+            and its children and grandchildren will become visible.
+          </li>
+          <li>
+            Move up one hierarchy level by clicking the containing group. This parent of this node
+            becomes the new root.
+          </li>
+        </ul>
+      </div>
+    </aside>
+    <div class="demo-page__main">
+      <div class="demo-main__graph-component">
+        <div id="graphComponent"></div>
+      </div>
+      <aside class="demo-main__sidebar">
+        <div class="demo-sidebar__content">
+          <h2>Tree Map Layout</h2>
+          <div class="demo-properties__settings">
+            <div class="demo-form-block">
+              <label for="select-zooming-mode" class="option-label">Zooming Mode</label>
+              <select id="select-zooming-mode" class="option-element">
+                <option value="constant">Constant Size</option>
+                <option value="aspect-ratio">Aspect Ratio of Root</option>
+              </select>
+            </div>
+            <div class="demo-form-block">
+              <label for="select-tiling-algorithm" class="option-label">Tiling Algorithm</label>
+              <select id="select-tiling-algorithm" class="option-element">
+                <option value="squarified">Squarified</option>
+                <option value="slice-and-dice">Slice-And-Dice</option>
+              </select>
+            </div>
+            <div class="demo-form-block">
+              <label for="aspect-ratio" class="option-label">Aspect Ratio</label>
+              <input type="range" id="aspect-ratio" min="1" max="10" value="1" />
+              <label id="aspect-ratio-label" class="number-label">1</label>
+            </div>
+            <div class="demo-form-block">
+              <label for="select-sorting-criterion" class="option-label">Sorting Criterion</label>
+              <select id="select-sorting-criterion" class="option-element">
+                <option value="size-descending">Size of File/Directory (descending)</option>
+                <option value="size-ascending">Size of File/Directory (ascending)</option>
+                <option value="name-descending">Name of File/Directory (descending)</option>
+                <option value="name-ascending">Name of File/Directory (ascending)</option>
+              </select>
+            </div>
+            <div class="demo-form-block">
+              <label for="select-file-directory-order" class="option-label">
+                File-Directory Order
+              </label>
+              <select id="select-file-directory-order" class="option-element">
+                <option value="files-after-directories">Files after Directories</option>
+                <option value="files-before-directories">Files before Directories</option>
+                <option value="mix-files-and-directories">Mix Files and Directories</option>
+              </select>
+            </div>
+            <div class="demo-form-block">
+              <label for="spacing" class="option-label">Spacing</label>
+              <input type="range" id="spacing" min="0" max="20" value="2" />
+              <label id="spacing-label" class="number-label">2</label>
+            </div>
+            <div class="demo-form-block">
+              <label for="minimum-node-width" class="option-label">Minimum Node Width</label>
+              <input type="range" id="minimum-node-width" min="5" max="50" value="5" />
+              <label id="minimum-node-width-label" class="number-label">5</label>
+            </div>
+            <div class="demo-form-block">
+              <label for="minimum-node-height" class="option-label">Minimum Node Height</label>
+              <input type="range" id="minimum-node-height" min="5" max="50" value="5" />
+              <label id="minimum-node-height-label" class="number-label">5</label>
+            </div>
+
+            <button id="apply-layout">Apply</button>
+          </div>
+        </div>
+      </aside>
+    </div>
+    <!-- a hidden container to measure text sizes -->
+    <div id="text-measure-container"></div>
+
+    <script type="module" crossorigin="anonymous" src="TreeMapDemo.js" async></script>
+  </body>
+</html>

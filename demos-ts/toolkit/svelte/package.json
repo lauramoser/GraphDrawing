@@ -1,0 +1,27 @@
+{
+  "name": "svelte-demo-for-yfiles-for-html",
+  "version": "1.0.0",
+  "author": "yWorks GmbH <yfileshtml@yworks.com>",
+  "license": "https://www.yworks.com/products/yfiles-for-html/sla",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "node --max_old_space_size=8192 node_modules/vite/bin/vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "demo-resources": "../../resources",
+    "demo-utils": "../../utils",
+    "yfiles": "../../../lib-dev/yfiles-26.0.4+dev.tgz"
+  },
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "^3.0.1",
+    "@tsconfig/svelte": "^5.0.2",
+    "@yworks/optimizer": "^1.8.2",
+    "svelte": "^4.2.7",
+    "svelte-preprocess": "^5.1.1",
+    "typescript": "~5.3.2",
+    "vite": "^5.0.4"
+  }
+}

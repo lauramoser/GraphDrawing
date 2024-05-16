@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+
+<!-- ////////////////////////////////////////////////////////////////////////
+     // @license
+     // This demo file is part of yFiles for HTML 2.6.0.4.
+     // Copyright (c) 2000-2024 by yWorks GmbH, Vor dem Kreuzberg 28,
+     // 72070 Tuebingen, Germany. All rights reserved.
+     //
+     // yFiles demo files exhibit yFiles for HTML functionalities. Any redistribution
+     // of demo files in source code or binary form, with or without
+     // modification, is not permitted.
+     //
+     // Owners of a valid software license for a yFiles for HTML version that this
+     // demo is shipped with are allowed to use the demo source code as basis
+     // for their own yFiles for HTML powered applications. Use of such programs is
+     // governed by the rights and conditions as set out in the yFiles for HTML
+     // license agreement.
+     //
+     // THIS SOFTWARE IS PROVIDED ''AS IS'' AND ANY EXPRESS OR IMPLIED
+     // WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+     // MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN
+     // NO EVENT SHALL yWorks BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+     // SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+     // TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+     // PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+     // LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+     // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+     // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+     //
+     ////////////////////////////////////////////////////////////////////////-->
+
+    <title>Drag and Drop Demo [yFiles for HTML]</title>
+    <script type="module" src="../../resources/demo-page-init.js" async></script>
+
+    <link rel="stylesheet" href="../../resources/style/demo.css" />
+    <link rel="stylesheet" href="resources/drag-and-drop-demo.css" />
+
+    <script src="../../resources/filesystem-warning.js"></script>
+  </head>
+  <body>
+    <header class="demo-header">
+      <a
+        href="https://www.yworks.com/products/yfiles"
+        class="demo-header__y-logo"
+        title="Visit yFiles product details"
+        target="_blank"
+      ></a>
+      <div class="demo-header__breadcrumb-wrapper">
+        <a href="https://www.yworks.com/products/yfiles">yFiles for HTML</a>
+        <a href="../../README.html">Demos</a>
+
+        <span>Drag and Drop</span>
+        <a href="../../README.html" class="demo-header__mobile-back">yFiles Demos</a>
+      </div>
+      <div class="demo-header__right">
+        <show-source-button></show-source-button>
+        <fullscreen-button></fullscreen-button>
+      </div>
+    </header>
+
+    <div class="demo-page__toolbar">
+      <button data-command="INCREASE_ZOOM"></button>
+      <button data-command="ZOOM_ORIGINAL"></button>
+      <button data-command="DECREASE_ZOOM"></button>
+      <button data-command="FIT_GRAPH_BOUNDS"></button>
+      <span class="demo-separator"></span>
+
+      <label>
+        <input type="checkbox" id="preview-snapping-checkbox" class="demo-checkbox" />
+        Preview Snapping
+      </label>
+    </div>
+    <aside class="demo-page__description">
+      <div class="demo-description__header">
+        <a
+          href="https://www.yworks.com/products/yfiles"
+          class="demo-description__logo"
+          title="Visit yFiles product details"
+          target="_blank"
+        ></a>
+      </div>
+      <div class="demo-description__toggle-button" title="Toggle description"></div>
+      <div class="demo-description__play-button">Start here</div>
+
+      <div class="demo-description__content">
+        <h1>Drag and Drop Demo</h1>
+
+        <p>
+          This demo shows how to enable drag and drop functionality for nodes using the classes
+          <a href="https://docs.yworks.com/yfileshtml/#/api/NodeDropInputMode" target="_blank">NodeDropInputMode</a>, <a href="https://docs.yworks.com/yfileshtml/#/api/LabelDropInputMode" target="_blank">LabelDropInputMode</a> and
+          <a href="https://docs.yworks.com/yfileshtml/#/api/PortDropInputMode" target="_blank">PortDropInputMode</a>. The demo features two drag and drop panels: the left
+          one uses yFiles drag and drop and the right one uses the browser-native drag and drop.
+        </p>
+
+        <p>
+          The difference between the two mechanisms is the way a drag is started. The left panel
+          starts a drag with e.g. <a href="https://docs.yworks.com/yfileshtml/#/api/NodeDropInputMode#startDrag" target="_blank">NodeDropInputMode.startDrag</a>. The right panel uses
+          the native "dragstart" event to start a drag. The drop input modes are able to react to
+          the native drag events. Unfortunately, snapping is not supported for elements dragged from
+          this palette. Note that the right palette only works with mouse events. Native drag and
+          drop currently cannot handle touch or pen events.
+        </p>
+
+        <p>
+          For dragging and dropping edges, the demo uses the custom class
+          <code>EdgeDropInputMode</code>.
+        </p>
+
+        <h2>Things to Try</h2>
+        <ul>
+          <li>Drag a node from the palette panels onto the canvas to create a new node.</li>
+          <li>
+            Drag a port or label from the palette panels onto a node/edge to create a new
+            label/port.
+          </li>
+          <li>Drag an item near a node to see snapping guide lines.</li>
+          <li>
+            Drag a node over a group node to see group node highlighting.
+            <br />
+            Additionally hold the 'Shift' key, if this node is not dragged from the palette panel.
+          </li>
+          <li>
+            Drop a node over a group node to place it inside the group.
+            <br />
+            If this node is not dragged from the palette panel, additionally hold the 'Shift' key.
+          </li>
+          <li>
+            Drag an edge from the palette onto another node in the canvas to start edge creation
+            from there.
+          </li>
+          <li>
+            Drag an edge from the palette onto the empty canvas to create a new node with an edge
+            creation in progress.
+          </li>
+          <li>
+            Drag an edge from the palette onto another edge to just apply the style of the dragged
+            edge.
+          </li>
+          <li>Toggle the preview snapping in the toolbar.</li>
+        </ul>
+
+        <h2>Related Demos</h2>
+        <ul>
+          <li>
+            <a href="../../input/graph-drag-and-drop/" target="_blank">Graph Drag and Drop Demo</a>
+          </li>
+          <li>
+            <a href="../../input/drag-from-component/" target="_blank">Drag From Component Demo</a>
+          </li>
+          <li>
+            <a href="../../input/custom-drag-and-drop/" target="_blank">Custom Drag and Drop Demo</a>
+          </li>
+          <li>
+            <a href="../../application-features/drag-and-drop/" target="_blank">Simple Drag And Drop Demo</a>
+          </li>
+        </ul>
+      </div>
+    </aside>
+    <div class="demo-page__main">
+      <div id="dnd-panel" class="demo-dnd-panel demo-dnd-panel--left">
+        <span class="demo-dnd-panel__header">yFiles Drag and Drop</span>
+      </div>
+
+      <div class="demo-main__graph-component">
+        <div id="graphComponent"></div>
+      </div>
+
+      <div id="native-dnd-panel" class="demo-dnd-panel demo-dnd-panel--right">
+        <span class="demo-dnd-panel__header">Native Drag and Drop</span>
+        <div id="disabled-indicator" class="disabled-indicator">
+          Snapping is not supported for Native Drag and Drop
+        </div>
+      </div>
+    </div>
+    <script type="module" crossorigin="anonymous" src="DragAndDropDemo.js" async></script>
+  </body>
+</html>

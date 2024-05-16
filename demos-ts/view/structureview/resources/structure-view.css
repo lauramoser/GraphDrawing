@@ -1,0 +1,105 @@
+/****************************************************************************
+ ** @license
+ ** This demo file is part of yFiles for HTML 2.6.0.4.
+ ** Copyright (c) 2000-2024 by yWorks GmbH, Vor dem Kreuzberg 28,
+ ** 72070 Tuebingen, Germany. All rights reserved.
+ **
+ ** yFiles demo files exhibit yFiles for HTML functionalities. Any redistribution
+ ** of demo files in source code or binary form, with or without
+ ** modification, is not permitted.
+ **
+ ** Owners of a valid software license for a yFiles for HTML version that this
+ ** demo is shipped with are allowed to use the demo source code as basis
+ ** for their own yFiles for HTML powered applications. Use of such programs is
+ ** governed by the rights and conditions as set out in the yFiles for HTML
+ ** license agreement.
+ **
+ ** THIS SOFTWARE IS PROVIDED ''AS IS'' AND ANY EXPRESS OR IMPLIED
+ ** WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ ** MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN
+ ** NO EVENT SHALL yWorks BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ ** SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+ ** TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ ** PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+ ** LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ ** NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ ** SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **
+ ***************************************************************************/
+.structure-view {
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 6px;
+  padding: 5px 15px 10px 15px;
+}
+
+.structure-view__list {
+  max-width: 100%;
+  width: 300px;
+  list-style: none;
+}
+
+.structure-view__node,
+.structure-view__group {
+  display: block;
+  position: relative;
+  margin: 2px 0;
+  padding: 0;
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.structure-view__group {
+  margin-top: 7px;
+}
+
+.structure-view__group > label {
+  display: block;
+  padding-left: 20px;
+  cursor: pointer;
+}
+
+.structure-view__group > label:hover {
+  font-weight: bold;
+}
+
+.structure-view__group > input[type='checkbox'] {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 1.2em;
+  width: 1.2em;
+  margin-left: 0;
+  margin-top: 0;
+  cursor: pointer;
+  appearance: none;
+  background: url('folder-collapsed.svg') 0 0 no-repeat;
+  z-index: 2;
+}
+
+.structure-view__group > input[type='checkbox']:checked {
+  background: url('folder-expanded.svg') 0 0 no-repeat;
+  background-size: 100% 100%;
+}
+
+.structure-view__group ol {
+  margin: 0;
+  padding-left: 22px;
+  height: auto;
+}
+
+.structure-view__group > input[type='checkbox']:not(:checked) + ol {
+  display: none;
+}
+
+.structure-view__node::before {
+  content: '\25A0';
+  padding-right: 0.4rem;
+  color: lightgray;
+  vertical-align: text-bottom;
+}
+
+.structure-view__node:hover {
+  font-weight: bold;
+}

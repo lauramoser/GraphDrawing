@@ -1,0 +1,48 @@
+{
+  "compilerOptions": {
+    "lib": [
+      "ES2022",
+      "dom",
+      "dom.iterable"
+    ],
+    "module": "es2022",
+    "target": "es2022",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "node",
+    "verbatimModuleSyntax": true,
+    "resolveJsonModule": true,
+    "types": [
+      "vite/client"
+    ]
+  },
+  "exclude": [
+    "loading/parcel",
+    "loading/vite",
+    "loading/webpack",
+    "loading/webpack-lazy-layout",
+    "loading/webpack-lazy-yfiles",
+    "loading/webworker-webpack",
+    "node_modules",
+    "style/angular-component-node-style",
+    "style/react-component-node-style",
+    "style/vue-component-node-style",
+    "style/vue-template-node-style",
+    "testing/cypress",
+    "testing/jest",
+    "testing/jest-puppeteer",
+    "testing/playwright",
+    "testing/selenium-webdriver",
+    "testing/vitest",
+    "testing/wdio",
+    "toolkit/angular",
+    "toolkit/next",
+    "toolkit/react",
+    "toolkit/react-class-components",
+    "toolkit/solid",
+    "toolkit/svelte",
+    "toolkit/vue"
+  ]
+}
