@@ -1,0 +1,86 @@
+Year: 1896
+  Sex: Male, Count: 81
+Year: 1900
+  Sex: Male, Count: 195
+  Sex: Female, Count: 7
+Year: 1904
+  Sex: Male, Count: 174
+  Sex: Female, Count: 3
+Year: 1908
+  Sex: Male, Count: 266
+  Sex: Female, Count: 14
+Year: 1912
+  Sex: Male, Count: 243
+  Sex: Female, Count: 17
+Year: 1920
+  Sex: Male, Count: 341
+  Sex: Female, Count: 25
+Year: 1924
+  Sex: Male, Count: 304
+  Sex: Female, Count: 30
+Year: 1928
+  Sex: Male, Count: 274
+  Sex: Female, Count: 41
+Year: 1932
+  Sex: Male, Count: 290
+  Sex: Female, Count: 39
+Year: 1936
+  Sex: Male, Count: 333
+  Sex: Female, Count: 42
+Year: 1948
+  Sex: Male, Count: 340
+  Sex: Female, Count: 51
+Year: 1952
+  Sex: Male, Count: 338
+  Sex: Female, Count: 59
+Year: 1956
+  Sex: Male, Count: 334
+  Sex: Female, Count: 57
+Year: 1960
+  Sex: Male, Count: 339
+  Sex: Female, Count: 66
+Year: 1964
+  Sex: Male, Count: 368
+  Sex: Female, Count: 74
+Year: 1968
+  Sex: Male, Count: 364
+  Sex: Female, Count: 86
+Year: 1972
+  Sex: Male, Count: 421
+  Sex: Female, Count: 100
+Year: 1976
+  Sex: Male, Count: 418
+  Sex: Female, Count: 120
+Year: 1980
+  Sex: Male, Count: 425
+  Sex: Female, Count: 127
+Year: 1984
+  Sex: Male, Count: 440
+  Sex: Female, Count: 158
+Year: 1988
+  Sex: Male, Count: 461
+  Sex: Female, Count: 182
+Year: 1992
+  Sex: Male, Count: 491
+  Sex: Female, Count: 232
+Year: 1996
+  Sex: Male, Count: 489
+  Sex: Female, Count: 264
+Year: 2000
+  Sex: Male, Count: 504
+  Sex: Female, Count: 334
+Year: 2004
+  Sex: Male, Count: 492
+  Sex: Female, Count: 346
+Year: 2008
+  Sex: Male, Count: 500
+  Sex: Female, Count: 364
+Year: 2012
+  Sex: Male, Count: 500
+  Sex: Female, Count: 377
+Year: 2016
+  Sex: Male, Count: 493
+  Sex: Female, Count: 395
+Year: 2020
+  Sex: Female, Count: 461
+  Sex: Male, Count: 521
