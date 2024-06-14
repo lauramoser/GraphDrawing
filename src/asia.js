@@ -9,11 +9,11 @@ document.addEventListener('DOMContentLoaded', function() {
         .attr('transform', `translate(${width / 2}, ${height / 2})`);
 
     const ringPositions = [
-        { x: -radius * 2.5, y: 0 },    // Europa
-        { x: -radius * 1.25, y: -radius * 1.5 },  // Asien
-        { x: 0, y: 0 },    // Afrika
-        { x: radius * 1.25, y: -radius * 1.5 },  // Australien
-        { x: radius * 2.5, y: 0 }     // Amerika
+        { x: -radius * 2.5, y: -radius * 1.5 }, // Europa
+        { x: -radius * 1.25, y: 0 },            // Asien
+        { x: 0, y: -radius * 1.5 },             // Afrika
+        { x: radius * 1.25, y: 0 },             // Australien
+        { x: radius * 2.5, y: -radius * 1.5 }   // Amerika
     ];
 
     const continentColors = {
@@ -24,106 +24,159 @@ document.addEventListener('DOMContentLoaded', function() {
         "America": "#FF0000"   // Rot
     };
 
-    Promise.all([
-        d3.json('olympics.json'),
-        d3.json('olympics_continents.json')
-    ]).then(([olympicsData, continentsData]) => {
-        console.log('Daten geladen:', olympicsData, continentsData);
+    d3.json('olympics_continents.json').then(data => {
+        console.log('Daten geladen:', data);
 
         let continentsMap = {};
-        continentsData.nodes.forEach(node => {
+        data.nodes.forEach(node => {
             continentsMap[node.id] = node.continent;
         });
 
         console.log('Kontinent Zuordnung:', continentsMap);
 
-        let countryNodes = olympicsData.nodes.filter(d => d.noc);
-        let sportNodes = [];
+        let countryNodes = data.nodes.filter(d => d.noc);
+        let sportNodes = data.nodes.filter(d => !d.noc);
 
-        let sportMedalCount = {};
-        olympicsData.links.forEach(link => {
+        let medalPoints = {
+            'Gold': 3,
+            'Silver': 2,
+            'Bronze': 1
+        };
+
+        let sportMedals = {};
+        let teams = {};
+
+        data.links.forEach(link => {
             link.attr.forEach(attr => {
                 let sportId = attr.sport.toLowerCase().replace(/\s+/g, '_');
+                let countryId = link.target;
+                let medal = attr.medal;
+                let sex = attr.athlete.sex;
+                let year = attr.year;
+                let city = attr.city;
+                let event = attr.event;
+
                 if (!sportNodes.some(s => s.id === sportId)) {
                     sportNodes.push({ name: attr.sport, id: sportId });
                 }
-                if (!sportMedalCount[sportId]) {
-                    sportMedalCount[sportId] = {};
+
+                if (!sportMedals[sportId]) {
+                    sportMedals[sportId] = { Male: {}, Female: {} };
                 }
-                if (!sportMedalCount[sportId][link.target]) {
-                    sportMedalCount[sportId][link.target] = 0;
+                
+                if (!sportMedals[sportId][sex][countryId]) {
+                    sportMedals[sportId][sex][countryId] = 0;
                 }
-                sportMedalCount[sportId][link.target] += 1;
+
+                if (!teams[sportId]) {
+                    teams[sportId] = {};
+                }
+                if (!teams[sportId][event]) {
+                    teams[sportId][event] = {};
+                }
+                if (!teams[sportId][event][year]) {
+                    teams[sportId][event][year] = {};
+                }
+                if (!teams[sportId][event][year][city]) {
+                    teams[sportId][event][year][city] = {};
+                }
+                if (!teams[sportId][event][year][city][medal] && event.includes("Team")) {
+                    teams[sportId][event][year][city][medal] = true;
+                    sportMedals[sportId][sex][countryId] += medalPoints[medal];
+                } else if (!event.includes("Team")) {
+                    sportMedals[sportId][sex][countryId] += medalPoints[medal];
+                }
             });
         });
 
-        let asiaCountries = countryNodes.filter(country => continentsMap[country.noc] === "Asia");
-        const allNodes = [...asiaCountries, ...sportNodes];
-        const angleScale = d3.scaleLinear()
-            .domain([0, allNodes.length])
-            .range([0, 2 * Math.PI]);
-
-        // Kanten von Sportarten zu den Ländern, die in diesen Sportarten die meisten Medaillen gewonnen haben
-        let sportToCountryLinks = sportNodes.map(sport => {
-            let maxCountryId = null;
-            let maxMedals = 0;
-            Object.keys(sportMedalCount[sport.id]).forEach(countryId => {
-                if (sportMedalCount[sport.id][countryId] > maxMedals && asiaCountries.some(country => country.id === countryId)) {
-                    maxMedals = sportMedalCount[sport.id][countryId];
-                    maxCountryId = countryId;
-                }
-            });
-            if (!maxCountryId) {
-                console.log(`Keine Medaillen für Sportart: ${sport.name}`);
+        const continentsOrder = ["Europe", "Asia", "Africa", "Oceania", "America"];
+        continentsOrder.forEach((continent, index) => {
+            let countries = countryNodes.filter(country => continentsMap[country.noc] === continent);
+            if (!countries.length) {
+                console.log(`Keine Länder gefunden für Kontinent: ${continent}`);
+                return;
             }
-            return maxCountryId ? { source: sport.id, target: maxCountryId } : { source: sport.id, target: 'dummy' };
+
+            let sportToCountryLinks = [];
+            Object.keys(sportMedals).forEach(sportId => {
+                ['Male', 'Female'].forEach(sex => {
+                    let maxCountryId = null;
+                    let maxPoints = 0;
+                    Object.keys(sportMedals[sportId][sex]).forEach(countryId => {
+                        if (sportMedals[sportId][sex][countryId] > maxPoints && countries.some(country => country.id === countryId)) {
+                            maxPoints = sportMedals[sportId][sex][countryId];
+                            maxCountryId = countryId;
+                        }
+                    });
+                    if (maxCountryId) {
+                        sportToCountryLinks.push({ source: sportId, target: maxCountryId, sex: sex });
+                    }
+                });
+            });
+
+            let sportNodesForContinent = sportNodes;
+            if (continent === "Africa") {
+                sportNodesForContinent = sportNodes.filter(sportNode => sportToCountryLinks.some(link => link.source === sportNode.id));
+            } else if (continent === "Europe" || continent === "Asia") {
+                sportNodesForContinent = sportNodes.filter(sportNode => {
+                    return sportToCountryLinks.some(link => link.source === sportNode.id && (
+                        continentsMap[link.target] === "Europe" || continentsMap[link.target] === "Asia"));
+                });
+            } else if (continent === "Oceania" || continent === "America") {
+                sportNodesForContinent = sportNodes.filter(sportNode => {
+                    return sportToCountryLinks.some(link => link.source === sportNode.id && (
+                        continentsMap[link.target] === "Oceania" || continentsMap[link.target] === "America"));
+                });
+            }
+
+            const allNodes = [...countries, ...sportNodesForContinent];
+            const angleScale = d3.scaleLinear()
+                .domain([0, allNodes.length])
+                .range([0, 2 * Math.PI]);
+
+            const ringPosition = ringPositions[index]; // Position des jeweiligen Rings
+
+            svg.append('g')
+                .selectAll('line')
+                .data(sportToCountryLinks)
+                .enter().append('line')
+                .attr('x1', d => ringPosition.x + radius * Math.cos(angleScale(allNodes.findIndex(node => node.id === d.source))))
+                .attr('y1', d => ringPosition.y + radius * Math.sin(angleScale(allNodes.findIndex(node => node.id === d.source))))
+                .attr('x2', d => ringPosition.x + radius * Math.cos(angleScale(allNodes.findIndex(node => node.id === d.target))))
+                .attr('y2', d => ringPosition.y + radius * Math.sin(angleScale(allNodes.findIndex(node => node.id === d.target))))
+                .attr('stroke', d => d.sex === 'Male' ? 'blue' : 'red')
+                .attr('stroke-width', 1);
+
+            // Knoten Länder und Sportarten im jeweiligen Ring
+            svg.append('g')
+                .selectAll('circle')
+                .data(allNodes)
+                .enter().append('circle')
+                .attr('cx', d => ringPosition.x + radius * Math.cos(angleScale(allNodes.indexOf(d))))
+                .attr('cy', d => ringPosition.y + radius * Math.sin(angleScale(allNodes.indexOf(d))))
+                .attr('r', 5)
+                .attr('fill', d => d.noc ? continentColors[continent] : '#DA70D6'); // Farbe für Länder, Lila für Sportarten
+
+            // Beschriftungen der Knoten (optional)
+            svg.append('g')
+                .selectAll('text')
+                .data(allNodes)
+                .enter().append('text')
+                .style('text-anchor', d => {
+                    const angle = angleScale(allNodes.indexOf(d));
+                    return (angle > Math.PI / 2 && angle < 3 * Math.PI / 2) ? 'end' : 'start';
+                })
+                .style('font-size', '12px')
+                .attr('x', d => ringPosition.x + (radius + 20) * Math.cos(angleScale(allNodes.indexOf(d))))
+                .attr('y', d => ringPosition.y + (radius + 20) * Math.sin(angleScale(allNodes.indexOf(d))))
+                .attr('transform', d => {
+                    const angle = angleScale(allNodes.indexOf(d)) * 180 / Math.PI;
+                    const rotateAngle = (angle > 90 && angle < 270) ? angle + 180 : angle;
+                    return `rotate(${rotateAngle},${ringPosition.x + (radius + 20) * Math.cos(angleScale(allNodes.indexOf(d)))},${ringPosition.y + (radius + 20) * Math.sin(angleScale(allNodes.indexOf(d)))})`;
+                })
+                .attr('alignment-baseline', 'middle')
+                .text(d => d.name);
         });
-
-        // Remove dummy links for sports with no medals in Asia
-        sportToCountryLinks = sportToCountryLinks.filter(link => link.target !== 'dummy');
-
-        const asiaRing = ringPositions[1]; // Position des gelben Asien-Rings
-
-        svg.append('g')
-            .selectAll('line')
-            .data(sportToCountryLinks)
-            .enter().append('line')
-            .attr('x1', d => asiaRing.x + radius * Math.cos(angleScale(allNodes.findIndex(node => node.id === d.source))))
-            .attr('y1', d => asiaRing.y + radius * Math.sin(angleScale(allNodes.findIndex(node => node.id === d.source))))
-            .attr('x2', d => asiaRing.x + radius * Math.cos(angleScale(allNodes.findIndex(node => node.id === d.target))))
-            .attr('y2', d => asiaRing.y + radius * Math.sin(angleScale(allNodes.findIndex(node => node.id === d.target))))
-            .attr('stroke', 'black')
-            .attr('stroke-width', 1);
-
-        // Knoten Länder und Sportarten im gelben Asien-Ring
-        svg.append('g')
-            .selectAll('circle')
-            .data(allNodes)
-            .enter().append('circle')
-            .attr('cx', d => asiaRing.x + radius * Math.cos(angleScale(allNodes.indexOf(d))))
-            .attr('cy', d => asiaRing.y + radius * Math.sin(angleScale(allNodes.indexOf(d))))
-            .attr('r', 5)
-            .attr('fill', d => d.noc ? '#FFD700' : '#DA70D6'); // Gelb für Länder, Lila für Sportarten
-
-        // Beschriftungen der Knoten (optional)
-        svg.append('g')
-            .selectAll('text')
-            .data(allNodes)
-            .enter().append('text')
-            .style('text-anchor', d => {
-                const angle = angleScale(allNodes.indexOf(d));
-                return (angle > Math.PI / 2 && angle < 3 * Math.PI / 2) ? 'end' : 'start';
-            })
-            .style('font-size', '12px')
-            .attr('x', d => asiaRing.x + (radius + 20) * Math.cos(angleScale(allNodes.indexOf(d))))
-            .attr('y', d => asiaRing.y + (radius + 20) * Math.sin(angleScale(allNodes.indexOf(d))))
-            .attr('transform', d => {
-                const angle = angleScale(allNodes.indexOf(d)) * 180 / Math.PI;
-                const rotateAngle = (angle > 90 && angle < 270) ? angle + 180 : angle;
-                return `rotate(${rotateAngle},${asiaRing.x + (radius + 20) * Math.cos(angleScale(allNodes.indexOf(d)))},${asiaRing.y + (radius + 20) * Math.sin(angleScale(allNodes.indexOf(d)))})`;
-            })
-            .attr('alignment-baseline', 'middle')
-            .text(d => d.name); // Entfernen Sie diese Zeile, wenn Sie keine Beschriftungen wünschen
     }).catch(error => {
         console.error('Fehler beim Laden der Daten:', error);
     });
