@@ -117,6 +117,16 @@ document.addEventListener('DOMContentLoaded', function() {
             let sportNodesForContinent = sportNodes;
             if (continent === "Africa") {
                 sportNodesForContinent = sportNodes.filter(sportNode => sportToCountryLinks.some(link => link.source === sportNode.id));
+            } else if (continent === "Europe" || continent === "Asia") {
+                sportNodesForContinent = sportNodes.filter(sportNode => {
+                    return sportToCountryLinks.some(link => link.source === sportNode.id && (
+                        continentsMap[link.target] === "Europe" || continentsMap[link.target] === "Asia"));
+                });
+            } else if (continent === "Oceania" || continent === "America") {
+                sportNodesForContinent = sportNodes.filter(sportNode => {
+                    return sportToCountryLinks.some(link => link.source === sportNode.id && (
+                        continentsMap[link.target] === "Oceania" || continentsMap[link.target] === "America"));
+                });
             }
 
             const allNodes = [...countries, ...sportNodesForContinent];
@@ -147,6 +157,25 @@ document.addEventListener('DOMContentLoaded', function() {
                 .attr('r', 5)
                 .attr('fill', d => d.noc ? continentColors[continent] : '#DA70D6'); // Farbe für Länder, Lila für Sportarten
 
+            // Beschriftungen der Knoten (optional)
+            svg.append('g')
+                .selectAll('text')
+                .data(allNodes)
+                .enter().append('text')
+                .style('text-anchor', d => {
+                    const angle = angleScale(allNodes.indexOf(d));
+                    return (angle > Math.PI / 2 && angle < 3 * Math.PI / 2) ? 'end' : 'start';
+                })
+                .style('font-size', '12px')
+                .attr('x', d => ringPosition.x + (radius + 20) * Math.cos(angleScale(allNodes.indexOf(d))))
+                .attr('y', d => ringPosition.y + (radius + 20) * Math.sin(angleScale(allNodes.indexOf(d))))
+                .attr('transform', d => {
+                    const angle = angleScale(allNodes.indexOf(d)) * 180 / Math.PI;
+                    const rotateAngle = (angle > 90 && angle < 270) ? angle + 180 : angle;
+                    return `rotate(${rotateAngle},${ringPosition.x + (radius + 20) * Math.cos(angleScale(allNodes.indexOf(d)))},${ringPosition.y + (radius + 20) * Math.sin(angleScale(allNodes.indexOf(d)))})`;
+                })
+                .attr('alignment-baseline', 'middle')
+                .text(d => d.name);
         });
     }).catch(error => {
         console.error('Fehler beim Laden der Daten:', error);

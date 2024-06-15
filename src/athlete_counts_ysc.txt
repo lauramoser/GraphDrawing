@@ -84,10 +84,10 @@ Year: 1932
     Continent: Asia, Count: 1
 Year: 1936
   Sex: Male
-    Continent: Europe, Count: 250
+    Continent: Europe, Count: 248
     Continent: Africa, Count: 6
     Continent: America, Count: 57
-    Continent: Asia, Count: 18
+    Continent: Asia, Count: 20
     Continent: Oceania, Count: 2
   Sex: Female
     Continent: Europe, Count: 30
@@ -95,10 +95,10 @@ Year: 1936
     Continent: Asia, Count: 1
 Year: 1948
   Sex: Male
-    Continent: Europe, Count: 232
+    Continent: Europe, Count: 220
     Continent: America, Count: 84
     Continent: Africa, Count: 12
-    Continent: Asia, Count: 5
+    Continent: Asia, Count: 17
     Continent: Oceania, Count: 7
   Sex: Female
     Continent: Europe, Count: 37
@@ -106,8 +106,8 @@ Year: 1948
     Continent: America, Count: 11
 Year: 1952
   Sex: Male
-    Continent: Europe, Count: 181
-    Continent: Asia, Count: 58
+    Continent: Europe, Count: 178
+    Continent: Asia, Count: 61
     Continent: America, Count: 83
     Continent: Africa, Count: 9
     Continent: Oceania, Count: 7
@@ -119,8 +119,8 @@ Year: 1952
     Continent: Asia, Count: 14
 Year: 1956
   Sex: Male
-    Continent: Europe, Count: 152
-    Continent: Asia, Count: 86
+    Continent: Europe, Count: 145
+    Continent: Asia, Count: 93
     Continent: America, Count: 70
     Continent: Africa, Count: 3
     Continent: Oceania, Count: 23
@@ -132,8 +132,8 @@ Year: 1956
     Continent: Asia, Count: 12
 Year: 1960
   Sex: Male
-    Continent: Europe, Count: 162
-    Continent: Asia, Count: 90
+    Continent: Europe, Count: 153
+    Continent: Asia, Count: 99
     Continent: America, Count: 65
     Continent: Africa, Count: 6
     Continent: Oceania, Count: 16
@@ -144,8 +144,8 @@ Year: 1960
     Continent: America, Count: 8
 Year: 1964
   Sex: Male
-    Continent: Europe, Count: 184
-    Continent: Asia, Count: 90
+    Continent: Europe, Count: 178
+    Continent: Asia, Count: 96
     Continent: America, Count: 72
     Continent: Africa, Count: 9
     Continent: Oceania, Count: 13
@@ -156,8 +156,8 @@ Year: 1964
     Continent: America, Count: 18
 Year: 1968
   Sex: Male
-    Continent: Europe, Count: 171
-    Continent: Asia, Count: 86
+    Continent: Europe, Count: 169
+    Continent: Asia, Count: 88
     Continent: Oceania, Count: 11
     Continent: America, Count: 84
     Continent: Africa, Count: 12
@@ -168,8 +168,8 @@ Year: 1968
     Continent: Oceania, Count: 7
 Year: 1972
   Sex: Male
-    Continent: Europe, Count: 221
-    Continent: Asia, Count: 96
+    Continent: Europe, Count: 220
+    Continent: Asia, Count: 97
     Continent: America, Count: 78
     Continent: Africa, Count: 16
     Continent: Oceania, Count: 10
@@ -204,8 +204,8 @@ Year: 1980
     Continent: Africa, Count: 1
 Year: 1984
   Sex: Male
-    Continent: Europe, Count: 202
-    Continent: Asia, Count: 59
+    Continent: Europe, Count: 199
+    Continent: Asia, Count: 62
     Continent: America, Count: 140
     Continent: Africa, Count: 12
     Continent: Oceania, Count: 27
@@ -218,8 +218,8 @@ Year: 1984
 Year: 1988
   Sex: Male
     Continent: America, Count: 74
-    Continent: Europe, Count: 220
-    Continent: Asia, Count: 135
+    Continent: Europe, Count: 218
+    Continent: Asia, Count: 137
     Continent: Oceania, Count: 18
     Continent: Africa, Count: 14
   Sex: Female
@@ -229,23 +229,23 @@ Year: 1988
     Continent: Oceania, Count: 6
 Year: 1992
   Sex: Male
-    Continent: Europe, Count: 221
-    Continent: Asia, Count: 65
+    Continent: Europe, Count: 216
+    Continent: Asia, Count: 70
     Continent: America, Count: 101
     Continent: None, Count: 63
     Continent: Africa, Count: 20
     Continent: Oceania, Count: 21
   Sex: Female
-    Continent: Europe, Count: 84
-    Continent: Asia, Count: 48
+    Continent: Europe, Count: 83
+    Continent: Asia, Count: 49
     Continent: None, Count: 35
     Continent: America, Count: 50
     Continent: Oceania, Count: 11
     Continent: Africa, Count: 4
 Year: 1996
   Sex: Male
-    Continent: Europe, Count: 234
-    Continent: Asia, Count: 107
+    Continent: Europe, Count: 227
+    Continent: Asia, Count: 114
     Continent: Oceania, Count: 24
     Continent: America, Count: 101
     Continent: Africa, Count: 23
@@ -257,80 +257,80 @@ Year: 1996
     Continent: Africa, Count: 10
 Year: 2000
   Sex: Male
-    Continent: Europe, Count: 233
-    Continent: Asia, Count: 114
+    Continent: Europe, Count: 227
+    Continent: Asia, Count: 120
     Continent: Oceania, Count: 34
     Continent: America, Count: 98
     Continent: Africa, Count: 25
   Sex: Female
-    Continent: Europe, Count: 143
-    Continent: Asia, Count: 93
+    Continent: Europe, Count: 141
+    Continent: Asia, Count: 95
     Continent: Oceania, Count: 21
     Continent: America, Count: 67
     Continent: Africa, Count: 10
 Year: 2004
   Sex: Male
-    Continent: Europe, Count: 221
-    Continent: Asia, Count: 143
+    Continent: Europe, Count: 209
+    Continent: Asia, Count: 155
     Continent: Oceania, Count: 23
     Continent: America, Count: 84
     Continent: Africa, Count: 21
   Sex: Female
-    Continent: Europe, Count: 141
-    Continent: Asia, Count: 108
+    Continent: Europe, Count: 138
+    Continent: Asia, Count: 111
     Continent: Oceania, Count: 20
     Continent: America, Count: 67
     Continent: Africa, Count: 10
 Year: 2008
   Sex: Male
-    Continent: Europe, Count: 214
-    Continent: Asia, Count: 140
+    Continent: Europe, Count: 206
+    Continent: Asia, Count: 148
     Continent: Oceania, Count: 26
     Continent: America, Count: 97
     Continent: Africa, Count: 23
   Sex: Female
-    Continent: Europe, Count: 131
-    Continent: Asia, Count: 113
+    Continent: Europe, Count: 129
+    Continent: Asia, Count: 115
     Continent: America, Count: 83
     Continent: Africa, Count: 17
     Continent: Oceania, Count: 20
 Year: 2012
   Sex: Male
-    Continent: Europe, Count: 216
-    Continent: Asia, Count: 149
+    Continent: Europe, Count: 207
+    Continent: Asia, Count: 158
     Continent: America, Count: 89
     Continent: Africa, Count: 24
     Continent: Oceania, Count: 22
   Sex: Female
-    Continent: Europe, Count: 142
-    Continent: Asia, Count: 119
+    Continent: Europe, Count: 139
+    Continent: Asia, Count: 122
     Continent: America, Count: 80
     Continent: Oceania, Count: 21
     Continent: Africa, Count: 15
 Year: 2016
   Sex: Male
-    Continent: Asia, Count: 134
-    Continent: Europe, Count: 217
+    Continent: Asia, Count: 155
+    Continent: Europe, Count: 196
     Continent: Oceania, Count: 24
     Continent: None, Count: 2
     Continent: America, Count: 92
     Continent: Africa, Count: 24
   Sex: Female
-    Continent: Europe, Count: 151
-    Continent: Asia, Count: 118
+    Continent: Europe, Count: 146
+    Continent: Asia, Count: 123
     Continent: Oceania, Count: 21
     Continent: America, Count: 87
     Continent: Africa, Count: 18
 Year: 2020
   Sex: Female
-    Continent: Europe, Count: 178
-    Continent: Asia, Count: 137
+    Continent: Europe, Count: 170
+    Continent: Asia, Count: 145
     Continent: America, Count: 104
     Continent: Africa, Count: 17
     Continent: Oceania, Count: 25
   Sex: Male
-    Continent: Asia, Count: 151
-    Continent: Europe, Count: 236
+    Continent: Asia, Count: 163
+    Continent: Europe, Count: 224
     Continent: America, Count: 84
     Continent: Africa, Count: 18
     Continent: Oceania, Count: 32
