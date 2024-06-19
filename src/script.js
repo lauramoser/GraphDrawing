@@ -180,19 +180,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
             const ringPosition = ringPositions[index]; // Position des jeweiligen Rings
 
+            let rotationOffset = 0
             const isEurope = continent === "Europe";
-            const rotationOffset = isEurope ? -45 * (Math.PI / 180) : 0; // degrees in radians
             const isOceania = continent === "Oceania";
-            const rotationOffsetOceania = isOceania ? 40 * (Math.PI / 180) : 0; // degrees in radians
+            const isAmerica = continent === "America";
+            rotationOffset = isEurope ? 175 * (Math.PI / 180) : rotationOffset; // degrees in radians
+            rotationOffset = isOceania ? 120 * (Math.PI / 180) : rotationOffset; // degrees in radians
+            rotationOffset = isAmerica ? -120 * (Math.PI / 180) : rotationOffset; // degrees in radians
+        
 
             svg.append('g')
                 .selectAll('line')
                 .data(sportToCountryLinks)
                 .enter().append('line')
-                .attr('x1', d => ringPosition.x + radius * Math.cos(isEurope ? -angleScale(allNodes.findIndex(node => node.id === d.source)) + rotationOffset : isOceania ? angleScale(allNodes.findIndex(node => node.id === d.source)) + rotationOffsetOceania : angleScale(allNodes.findIndex(node => node.id === d.source))))
-                .attr('y1', d => ringPosition.y + radius * Math.sin(isEurope ? -angleScale(allNodes.findIndex(node => node.id === d.source)) + rotationOffset : isOceania ? angleScale(allNodes.findIndex(node => node.id === d.source)) + rotationOffsetOceania : angleScale(allNodes.findIndex(node => node.id === d.source))))
-                .attr('x2', d => ringPosition.x + radius * Math.cos(isEurope ? -angleScale(allNodes.findIndex(node => node.id === d.target)) + rotationOffset : isOceania ? angleScale(allNodes.findIndex(node => node.id === d.target)) + rotationOffsetOceania : angleScale(allNodes.findIndex(node => node.id === d.target))))
-                .attr('y2', d => ringPosition.y + radius * Math.sin(isEurope ? -angleScale(allNodes.findIndex(node => node.id === d.target)) + rotationOffset : isOceania ? angleScale(allNodes.findIndex(node => node.id === d.target)) + rotationOffsetOceania : angleScale(allNodes.findIndex(node => node.id === d.target))))
+                .attr('x1', d => ringPosition.x + radius * Math.cos(angleScale(allNodes.findIndex(node => node.id === d.source)) + rotationOffset ))
+                .attr('y1', d => ringPosition.y + radius * Math.sin(angleScale(allNodes.findIndex(node => node.id === d.source)) + rotationOffset))
+                .attr('x2', d => ringPosition.x + radius * Math.cos(angleScale(allNodes.findIndex(node => node.id === d.target)) + rotationOffset ))
+                .attr('y2', d => ringPosition.y + radius * Math.sin(angleScale(allNodes.findIndex(node => node.id === d.target)) + rotationOffset ))
                 .attr('stroke', d => d.sex === 'Male' ? 'blue' : 'red')
                 .attr('stroke-width', 1);
 
@@ -201,8 +205,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 .selectAll('circle')
                 .data(allNodes)
                 .enter().append('circle')
-                .attr('cx', d => ringPosition.x + radius * Math.cos(isEurope ? -angleScale(allNodes.indexOf(d)) + rotationOffset : isOceania ? angleScale(allNodes.indexOf(d)) + rotationOffsetOceania : angleScale(allNodes.indexOf(d))))
-                .attr('cy', d => ringPosition.y + radius * Math.sin(isEurope ? -angleScale(allNodes.indexOf(d)) + rotationOffset : isOceania ? angleScale(allNodes.indexOf(d)) + rotationOffsetOceania : angleScale(allNodes.indexOf(d))))
+                .attr('cx', d => ringPosition.x + radius * Math.cos(angleScale(allNodes.indexOf(d)) + rotationOffset))
+                .attr('cy', d => ringPosition.y + radius * Math.sin(angleScale(allNodes.indexOf(d)) + rotationOffset))
                 .attr('r', 5)
                 .attr('fill', d => d.noc ? continentColors[continent] : '#DA70D6'); // Farbe für Länder, Lila für Sportarten
 
