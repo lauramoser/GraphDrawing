@@ -89,6 +89,55 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
 
+        // Filter sports that have no connections in Europe and Asia
+        let sportsToRemoveEuropeAsia = new Set();
+        sportNodes.forEach(sportNode => {
+            let hasConnectionInEurope = false;
+            let hasConnectionInAsia = false;
+            ['Male', 'Female'].forEach(sex => {
+                if (sportMedals[sportNode.id] && sportMedals[sportNode.id][sex]) {
+                    for (let countryId in sportMedals[sportNode.id][sex]) {
+                        if (continentsMap[countryId] === 'Europe') {
+                            hasConnectionInEurope = true;
+                        }
+                        if (continentsMap[countryId] === 'Asia') {
+                            hasConnectionInAsia = true;
+                        }
+                    }
+                }
+            });
+            if (!hasConnectionInEurope && !hasConnectionInAsia) {
+                sportsToRemoveEuropeAsia.add(sportNode.id);
+            }
+        });
+
+        console.log('Sports to remove from Europe and Asia:', Array.from(sportsToRemoveEuropeAsia));
+
+        // Filter sports that have no connections in Oceania and America
+        let sportsToRemoveOceaniaAmerica = new Set();
+        sportNodes.forEach(sportNode => {
+            let hasConnectionInOceania = false;
+            let hasConnectionInAmerica = false;
+            ['Male', 'Female'].forEach(sex => {
+                if (sportMedals[sportNode.id] && sportMedals[sportNode.id][sex]) {
+                    for (let countryId in sportMedals[sportNode.id][sex]) {
+                        if (continentsMap[countryId] === 'Oceania') {
+                            hasConnectionInOceania = true;
+                        }
+                        if (continentsMap[countryId] === 'America') {
+                            hasConnectionInAmerica = true;
+                        }
+                    }
+                }
+            });
+            if (!hasConnectionInOceania && !hasConnectionInAmerica) {
+                sportsToRemoveOceaniaAmerica.add(sportNode.id);
+            }
+        });
+
+        console.log('Sports to remove from Oceania and America:', Array.from(sportsToRemoveOceaniaAmerica));
+        
+
         const continentsOrder = ["Europe", "Asia", "Africa", "Oceania", "America"];
         continentsOrder.forEach((continent, index) => {
             let countries = countryNodes.filter(country => continentsMap[country.noc] === continent);
@@ -114,26 +163,36 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             });
 
-            let sportNodesForContinent = sportNodes;
-            if (continent === "Africa") {
-                sportNodesForContinent = sportNodes.filter(sportNode => sportToCountryLinks.some(link => link.source === sportNode.id));
+            // Filter the sport nodes for the current continent
+            let filteredSportNodes;
+            if (continent === "Europe" || continent === "Asia") {
+                filteredSportNodes = sportNodes.filter(sportNode => !sportsToRemoveEuropeAsia.has(sportNode.id));
+            } else if (continent === "Oceania" || continent === "America") {
+                filteredSportNodes = sportNodes.filter(sportNode => !sportsToRemoveOceaniaAmerica.has(sportNode.id));
+            } else if (continent === "Africa") {
+                filteredSportNodes = sportNodes.filter(sportNode => sportToCountryLinks.some(link => link.source === sportNode.id));
             }
 
-            const allNodes = [...countries, ...sportNodesForContinent];
+            const allNodes = [...countries, ...filteredSportNodes];
             const angleScale = d3.scaleLinear()
                 .domain([0, allNodes.length])
                 .range([0, 2 * Math.PI]);
 
             const ringPosition = ringPositions[index]; // Position des jeweiligen Rings
 
+            const isEurope = continent === "Europe";
+            const rotationOffset = isEurope ? -45 * (Math.PI / 180) : 0; // degrees in radians
+            const isOceania = continent === "Oceania";
+            const rotationOffsetOceania = isOceania ? 40 * (Math.PI / 180) : 0; // degrees in radians
+
             svg.append('g')
                 .selectAll('line')
                 .data(sportToCountryLinks)
                 .enter().append('line')
-                .attr('x1', d => ringPosition.x + radius * Math.cos(angleScale(allNodes.findIndex(node => node.id === d.source))))
-                .attr('y1', d => ringPosition.y + radius * Math.sin(angleScale(allNodes.findIndex(node => node.id === d.source))))
-                .attr('x2', d => ringPosition.x + radius * Math.cos(angleScale(allNodes.findIndex(node => node.id === d.target))))
-                .attr('y2', d => ringPosition.y + radius * Math.sin(angleScale(allNodes.findIndex(node => node.id === d.target))))
+                .attr('x1', d => ringPosition.x + radius * Math.cos(isEurope ? -angleScale(allNodes.findIndex(node => node.id === d.source)) + rotationOffset : isOceania ? angleScale(allNodes.findIndex(node => node.id === d.source)) + rotationOffsetOceania : angleScale(allNodes.findIndex(node => node.id === d.source))))
+                .attr('y1', d => ringPosition.y + radius * Math.sin(isEurope ? -angleScale(allNodes.findIndex(node => node.id === d.source)) + rotationOffset : isOceania ? angleScale(allNodes.findIndex(node => node.id === d.source)) + rotationOffsetOceania : angleScale(allNodes.findIndex(node => node.id === d.source))))
+                .attr('x2', d => ringPosition.x + radius * Math.cos(isEurope ? -angleScale(allNodes.findIndex(node => node.id === d.target)) + rotationOffset : isOceania ? angleScale(allNodes.findIndex(node => node.id === d.target)) + rotationOffsetOceania : angleScale(allNodes.findIndex(node => node.id === d.target))))
+                .attr('y2', d => ringPosition.y + radius * Math.sin(isEurope ? -angleScale(allNodes.findIndex(node => node.id === d.target)) + rotationOffset : isOceania ? angleScale(allNodes.findIndex(node => node.id === d.target)) + rotationOffsetOceania : angleScale(allNodes.findIndex(node => node.id === d.target))))
                 .attr('stroke', d => d.sex === 'Male' ? 'blue' : 'red')
                 .attr('stroke-width', 1);
 
@@ -142,8 +201,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 .selectAll('circle')
                 .data(allNodes)
                 .enter().append('circle')
-                .attr('cx', d => ringPosition.x + radius * Math.cos(angleScale(allNodes.indexOf(d))))
-                .attr('cy', d => ringPosition.y + radius * Math.sin(angleScale(allNodes.indexOf(d))))
+                .attr('cx', d => ringPosition.x + radius * Math.cos(isEurope ? -angleScale(allNodes.indexOf(d)) + rotationOffset : isOceania ? angleScale(allNodes.indexOf(d)) + rotationOffsetOceania : angleScale(allNodes.indexOf(d))))
+                .attr('cy', d => ringPosition.y + radius * Math.sin(isEurope ? -angleScale(allNodes.indexOf(d)) + rotationOffset : isOceania ? angleScale(allNodes.indexOf(d)) + rotationOffsetOceania : angleScale(allNodes.indexOf(d))))
                 .attr('r', 5)
                 .attr('fill', d => d.noc ? continentColors[continent] : '#DA70D6'); // Farbe für Länder, Lila für Sportarten
 
