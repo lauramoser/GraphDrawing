@@ -1,3 +1,7 @@
+import { africaSportOrder, africaCountryOrder } from './orders/africaOrder.js';
+import { europaSportOrder, europaCountryOrder } from './orders/europaOrder.js';
+import { asienSportOrder, asienCountryOrder } from './orders/asienOrder.js';
+
 document.addEventListener('DOMContentLoaded', function() {
     const width = 1400, height = 1000;
     const radius = Math.min(width, height) / 6;
@@ -23,65 +27,6 @@ document.addEventListener('DOMContentLoaded', function() {
         "Oceania": "#00FF00",  // Grün
         "America": "#FF0000"   // Rot
     };
-
-    const africaSportOrder = [
-        "hockey",
-        "swimming",
-        "canoe_sprint",
-        "surfing",
-        "shooting",
-        "cycling_track",
-        "cycling_road",
-        "triathlon",
-        "rowing",
-        "art_competitions",
-        "tennis",
-        "rugby_sevens",
-        "boxing",
-        "canoe_slalom",
-        "football",
-        "wrestling",
-        "judo",
-        "modern_pentathlon",
-        "diving",
-        "fencing",
-        "taekwondo",
-        "karate",
-        "weightlifting",
-        "marathon_swimming",
-        "athletics"
-    ];
-
-    const africaCountryOrder = [
-        "ERI",
-        "TAN",
-        "CIV",
-        "BOT",
-        "ETH",
-        "NIG",
-        "NAM",
-        "MRI",
-        "KEN",
-        "TUN",
-        "BUR",
-        "SEN",
-        "EGY",
-        "ALG",
-        "NGR",
-        "DJI",
-        "TOG",
-        "GHA",
-        "RSA",
-        "MAR",
-        "CMR",
-        "ZIM",
-        "MOZ",
-        "BDI",
-        "ZAM",
-        "TTO",
-        "UGA",
-        "GAB"
-    ];
 
     d3.json('olympics_continents.json').then(data => {
         console.log('Daten geladen:', data);
@@ -204,6 +149,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
 
+            if (continent === "Europe") {
+                console.log('Länder in Europa:', countries.map(country => country.id));
+            }
+
             let sportToCountryLinks = [];
             Object.keys(sportMedals).forEach(sportId => {
                 ['Male', 'Female'].forEach(sex => {
@@ -223,19 +172,36 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Filter the sport nodes for the current continent
             let filteredSportNodes;
-            if (continent === "Europe" || continent === "Asia") {
-                filteredSportNodes = sportNodes.filter(sportNode => !sportsToRemoveEuropeAsia.has(sportNode.id));
+            let orderedCountries;
+            if (continent === "Europe") {
+                filteredSportNodes = sportNodes
+                    .filter(sportNode => !sportsToRemoveEuropeAsia.has(sportNode.id) && europaSportOrder.includes(sportNode.id))
+                    .sort((a, b) => europaSportOrder.indexOf(a.id) - europaSportOrder.indexOf(b.id));
+                
+                orderedCountries = europaCountryOrder
+                    .map(countryId => countries.find(country => country.id === countryId))
+                    .filter(Boolean);
+            } else if (continent === "Asia") {
+                filteredSportNodes = sportNodes
+                    .filter(sportNode => !sportsToRemoveEuropeAsia.has(sportNode.id) && asienSportOrder.includes(sportNode.id))
+                    .sort((a, b) => asienSportOrder.indexOf(a.id) - asienSportOrder.indexOf(b.id));
+                
+                orderedCountries = asienCountryOrder
+                    .map(countryId => countries.find(country => country.id === countryId))
+                    .filter(Boolean);
             } else if (continent === "Oceania" || continent === "America") {
                 filteredSportNodes = sportNodes.filter(sportNode => !sportsToRemoveOceaniaAmerica.has(sportNode.id));
+                orderedCountries = countries;
             } else if (continent === "Africa") {
                 filteredSportNodes = africaSportOrder.map(sportId => sportNodes.find(node => node.id === sportId)).filter(Boolean);
+                orderedCountries = africaCountryOrder
+                    .map(countryId => countries.find(country => country.id === countryId))
+                    .filter(Boolean);
             }
 
-            // Combine countries and sports for Africa
             let allNodes;
-            if (continent === "Africa") {
-                const africaCountries = africaCountryOrder.map(countryId => countryNodes.find(node => node.noc === countryId)).filter(Boolean);
-                allNodes = [...africaCountries, ...filteredSportNodes];
+            if (continent === "Africa" || continent === "Europe" || continent === "Asia") {
+                allNodes = [...orderedCountries, ...filteredSportNodes];
             } else {
                 allNodes = [...countries, ...filteredSportNodes];
             }
@@ -251,14 +217,15 @@ document.addEventListener('DOMContentLoaded', function() {
             const isOceania = continent === "Oceania";
             const isAmerica = continent === "America";
             const isAfrica = continent === "Africa";
-            rotationOffset = isEurope ? 175 * (Math.PI / 180) : rotationOffset; // degrees in radians
-            rotationOffset = isOceania ? 120 * (Math.PI / 180) : rotationOffset; // degrees in radians
-            rotationOffset = isAmerica ? -120 * (Math.PI / 180) : rotationOffset; // degrees in radians
-            rotationOffset = isAfrica ? 85 * (Math.PI / 180) : rotationOffset; // degrees in radians
-    
+            const isAsia = continent === "Asia";
+            rotationOffset = isEurope ? 260 * (Math.PI / 180) : rotationOffset; 
+            rotationOffset = isOceania ? 120 * (Math.PI / 180) : rotationOffset; 
+            rotationOffset = isAmerica ? -120 * (Math.PI / 180) : rotationOffset;
+            rotationOffset = isAfrica ? 85 * (Math.PI / 180) : rotationOffset; 
+            rotationOffset = isAsia ? 85 * (Math.PI / 180) : rotationOffset; 
 
-            if (continent === "Africa") {
-                // Hier beginnt das Edge Bundling für Afrika
+            // Edge bundling for continents with a specific order
+            if (continent === "Africa" || continent === "Europe" || continent === "Asia") {
                 const cluster = d3.cluster()
                     .size([2 * Math.PI, radius]); // gleiche Größe wie die anderen Ringe
 
@@ -267,7 +234,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     .radius(d => d.y)
                     .angle(d => d.x);
 
-                const root = d3.hierarchy(buildHierarchy(africaCountryOrder, africaSportOrder, sportToCountryLinks))
+                const root = d3.hierarchy(buildHierarchy(orderedCountries.map(d => d.id), filteredSportNodes.map(d => d.id), sportToCountryLinks))
                     .sum(d => d.size);
 
                 cluster(root);
@@ -277,10 +244,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     return { source: leaf, target: targetLeaf, sex: leaf.data.sex };
                 }));
 
-                const africaGroup = svg.append('g')
+                const continentGroup = svg.append('g')
                     .attr('transform', `translate(${ringPosition.x},${ringPosition.y}) rotate(${rotationOffset * 180 / Math.PI})`);
 
-                africaGroup.append('g')
+                continentGroup.append('g')
                     .selectAll('path')
                     .data(links)
                     .enter().append('path')
@@ -289,31 +256,34 @@ document.addEventListener('DOMContentLoaded', function() {
                     .style('stroke', d => d.sex === 'Male' ? 'blue' : 'red')
                     .style('stroke-width', 1.5);
 
-                africaGroup.append('g')
+                continentGroup.append('g')
                     .selectAll('circle')
                     .data(root.leaves())
                     .enter().append('circle')
                     .attr('transform', d => `rotate(${d.x * 180 / Math.PI - 90})translate(${d.y},0)`)
                     .attr('r', 5)
-                    .attr('fill', d => d.data.noc ? continentColors["Africa"] : '#DA70D6');
+                    .attr('fill', d => d.data.noc ? continentColors[continent] : '#DA70D6');
             } else {
-                svg.append('g')
+                const group = svg.append('g')
+                    .attr('transform', `translate(${ringPosition.x},${ringPosition.y})`);
+
+                group.append('g')
                     .selectAll('line')
                     .data(sportToCountryLinks)
                     .enter().append('line')
-                    .attr('x1', d => ringPosition.x + radius * Math.cos(angleScale(allNodes.findIndex(node => node.id === d.source)) + rotationOffset))
-                    .attr('y1', d => ringPosition.y + radius * Math.sin(angleScale(allNodes.findIndex(node => node.id === d.source)) + rotationOffset))
-                    .attr('x2', d => ringPosition.x + radius * Math.cos(angleScale(allNodes.findIndex(node => node.id === d.target)) + rotationOffset))
-                    .attr('y2', d => ringPosition.y + radius * Math.sin(angleScale(allNodes.findIndex(node => node.id === d.target)) + rotationOffset))
+                    .attr('x1', d => radius * Math.cos(angleScale(allNodes.findIndex(node => node.id === d.source)) + rotationOffset))
+                    .attr('y1', d => radius * Math.sin(angleScale(allNodes.findIndex(node => node.id === d.source)) + rotationOffset))
+                    .attr('x2', d => radius * Math.cos(angleScale(allNodes.findIndex(node => node.id === d.target)) + rotationOffset))
+                    .attr('y2', d => radius * Math.sin(angleScale(allNodes.findIndex(node => node.id === d.target)) + rotationOffset))
                     .attr('stroke', d => d.sex === 'Male' ? 'blue' : 'red')
                     .attr('stroke-width', 1);
 
-                svg.append('g')
+                group.append('g')
                     .selectAll('circle')
                     .data(allNodes)
                     .enter().append('circle')
-                    .attr('cx', d => ringPosition.x + radius * Math.cos(angleScale(allNodes.indexOf(d)) + rotationOffset))
-                    .attr('cy', d => ringPosition.y + radius * Math.sin(angleScale(allNodes.indexOf(d)) + rotationOffset))
+                    .attr('cx', d => radius * Math.cos(angleScale(allNodes.indexOf(d)) + rotationOffset))
+                    .attr('cy', d => radius * Math.sin(angleScale(allNodes.indexOf(d)) + rotationOffset))
                     .attr('r', 5)
                     .attr('fill', d => d.noc ? continentColors[continent] : '#DA70D6');
             }
