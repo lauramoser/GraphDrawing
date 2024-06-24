@@ -1,8 +1,10 @@
 import { africaSportOrder, africaCountryOrder } from './orders/africaOrder.js';
 import { europaSportOrder, europaCountryOrder } from './orders/europaOrder.js';
 import { asienSportOrder, asienCountryOrder } from './orders/asienOrder.js';
+import { americaSportOrder, americaCountryOrder } from './orders/americaOrder.js';
+import { oceaniaSportOrder, oceaniaCountryOrder } from './orders/oceaniaOrder.js';
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const width = 1400, height = 1000;
     const radius = Math.min(width, height) / 6;
 
@@ -149,8 +151,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
 
+            // Todo: remove
             if (continent === "Europe") {
                 console.log('Länder in Europa:', countries.map(country => country.id));
+            }
+            if (continent === "Oceania") {
+                console.log('Länder in Ozeaninen:', countries.map(country => country.id));
+                console.log('Sportarten in Oceanien', sportNodes.map(sport => sport.id))
+            }
+            if (continent === "America") {
+                console.log('Länder in Amerika:', countries.map(country => country.id));
+                console.log('Sportarten in Amerika', sportNodes.map(sport => sport.id))
             }
 
             let sportToCountryLinks = [];
@@ -177,7 +188,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 filteredSportNodes = sportNodes
                     .filter(sportNode => !sportsToRemoveEuropeAsia.has(sportNode.id) && europaSportOrder.includes(sportNode.id))
                     .sort((a, b) => europaSportOrder.indexOf(a.id) - europaSportOrder.indexOf(b.id));
-                
                 orderedCountries = europaCountryOrder
                     .map(countryId => countries.find(country => country.id === countryId))
                     .filter(Boolean);
@@ -185,13 +195,23 @@ document.addEventListener('DOMContentLoaded', function() {
                 filteredSportNodes = sportNodes
                     .filter(sportNode => !sportsToRemoveEuropeAsia.has(sportNode.id) && asienSportOrder.includes(sportNode.id))
                     .sort((a, b) => asienSportOrder.indexOf(a.id) - asienSportOrder.indexOf(b.id));
-                
                 orderedCountries = asienCountryOrder
                     .map(countryId => countries.find(country => country.id === countryId))
                     .filter(Boolean);
-            } else if (continent === "Oceania" || continent === "America") {
-                filteredSportNodes = sportNodes.filter(sportNode => !sportsToRemoveOceaniaAmerica.has(sportNode.id));
-                orderedCountries = countries;
+            } else if (continent === "Oceania") {
+                filteredSportNodes = sportNodes
+                    .filter(sportNode => !sportsToRemoveOceaniaAmerica.has(sportNode.id) && oceaniaSportOrder.includes(sportNode.id))
+                    .sort((a, b) => oceaniaSportOrder.indexOf(a.id) - oceaniaSportOrder.indexOf(b.id));
+                orderedCountries = oceaniaCountryOrder
+                    .map(countryId => countries.find(country => country.id === countryId))
+                    .filter(Boolean);
+            } else if (continent === "America") {
+                filteredSportNodes = sportNodes
+                    .filter(sportNode => !sportsToRemoveOceaniaAmerica.has(sportNode.id) && americaSportOrder.includes(sportNode.id))
+                    .sort((a, b) => americaSportOrder.indexOf(a.id) - americaSportOrder.indexOf(b.id));
+                orderedCountries = americaCountryOrder
+                    .map(countryId => countries.find(country => country.id === countryId))
+                    .filter(Boolean);
             } else if (continent === "Africa") {
                 filteredSportNodes = africaSportOrder.map(sportId => sportNodes.find(node => node.id === sportId)).filter(Boolean);
                 orderedCountries = africaCountryOrder
@@ -199,12 +219,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     .filter(Boolean);
             }
 
-            let allNodes;
-            if (continent === "Africa" || continent === "Europe" || continent === "Asia") {
-                allNodes = [...orderedCountries, ...filteredSportNodes];
-            } else {
-                allNodes = [...countries, ...filteredSportNodes];
-            }
+
+            let allNodes = [...orderedCountries, ...filteredSportNodes];
 
             const angleScale = d3.scaleLinear()
                 .domain([0, allNodes.length])
@@ -218,14 +234,15 @@ document.addEventListener('DOMContentLoaded', function() {
             const isAmerica = continent === "America";
             const isAfrica = continent === "Africa";
             const isAsia = continent === "Asia";
-            rotationOffset = isEurope ? 260 * (Math.PI / 180) : rotationOffset; 
-            rotationOffset = isOceania ? 120 * (Math.PI / 180) : rotationOffset; 
-            rotationOffset = isAmerica ? -120 * (Math.PI / 180) : rotationOffset;
-            rotationOffset = isAfrica ? 85 * (Math.PI / 180) : rotationOffset; 
-            rotationOffset = isAsia ? 85 * (Math.PI / 180) : rotationOffset; 
+            rotationOffset = isEurope ? 260 * (Math.PI / 180) : rotationOffset;
+            rotationOffset = isOceania ? 205 * (Math.PI / 180) : rotationOffset;
+            rotationOffset = isAmerica ? -5 * (Math.PI / 180) : rotationOffset;
+            rotationOffset = isAfrica ? 85 * (Math.PI / 180) : rotationOffset;
+            rotationOffset = isAsia ? 85 * (Math.PI / 180) : rotationOffset;
 
             // Edge bundling for continents with a specific order
-            if (continent === "Africa" || continent === "Europe" || continent === "Asia") {
+            // Auskommentiert, allerdings noch drin gelassen damit einfach ohne edge-bundling genutzt werden kann. Um einzelne Kanten besser nachverfolgen zu können.
+          //  if (continent === "Africa" || continent === "Europe" || continent === "Asia" || continent === 'Oceania' || continent === 'America') {
                 const cluster = d3.cluster()
                     .size([2 * Math.PI, radius]); // gleiche Größe wie die anderen Ringe
 
@@ -263,7 +280,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     .attr('transform', d => `rotate(${d.x * 180 / Math.PI - 90})translate(${d.y},0)`)
                     .attr('r', 5)
                     .attr('fill', d => d.data.noc ? continentColors[continent] : '#DA70D6');
-            } else {
+                    // Auskommentiert, allerdings noch drin gelassen damit einfach ohne edge-bundling genutzt werden kann. Um einzelne Kanten besser nachverfolgen zu können.
+           /* } else {
                 const group = svg.append('g')
                     .attr('transform', `translate(${ringPosition.x},${ringPosition.y})`);
 
@@ -286,7 +304,27 @@ document.addEventListener('DOMContentLoaded', function() {
                     .attr('cy', d => radius * Math.sin(angleScale(allNodes.indexOf(d)) + rotationOffset))
                     .attr('r', 5)
                     .attr('fill', d => d.noc ? continentColors[continent] : '#DA70D6');
-            }
+                if (continent === 'America') {
+                    svg.append('g')
+                        .selectAll('text')
+                        .data(allNodes)
+                        .enter().append('text')
+                        .style('text-anchor', d => {
+                            const angle = angleScale(allNodes.indexOf(d));
+                            return (angle > Math.PI / 2 && angle < 3 * Math.PI / 2) ? 'end' : 'start';
+                        })
+                        .style('font-size', '12px')
+                        .attr('x', d => ringPosition.x + (radius + 20) * Math.cos(angleScale(allNodes.indexOf(d))))
+                        .attr('y', d => ringPosition.y + (radius + 20) * Math.sin(angleScale(allNodes.indexOf(d))))
+                        .attr('transform', d => {
+                            const angle = angleScale(allNodes.indexOf(d)) * 180 / Math.PI;
+                            const rotateAngle = (angle > 90 && angle < 270) ? angle + 180 : angle;
+                            return `rotate(${rotateAngle},${ringPosition.x + (radius + 20) * Math.cos(angleScale(allNodes.indexOf(d)))},${ringPosition.y + (radius + 20) * Math.sin(angleScale(allNodes.indexOf(d)))})`;
+                        })
+                        .attr('alignment-baseline', 'middle')
+                        .text(d => d.name);
+                }
+            }*/
         });
 
         function buildHierarchy(countries, sports, links) {
