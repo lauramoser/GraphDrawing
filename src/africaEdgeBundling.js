@@ -51,6 +51,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         let sportMedals = {};
         let teams = {};
+        let sportsList = [];
 
         data.links.forEach(link => {
             link.attr.forEach(attr => {
@@ -72,6 +73,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 if (!sportMedals[sportId][sex][countryId]) {
                     sportMedals[sportId][sex][countryId] = 0;
+                }
+                
+                // sport list for Zoe
+                // can be removed later on
+                if (!sportsList.includes(sportId)) {
+                    sportsList.push(sportId)
                 }
 
                 if (!teams[sportId]) {
@@ -157,7 +164,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // sport list for Zoe
         // can be removed later on
-        console.log('Liste aller Sportarten:', sportNodes.map(sport => sport.id))
+        console.log('Liste aller Sportarten:', sportsList)
+        console.log('Liste aller Sportarten & Kategorien:', sportNodes.map(sport => sport.id))
+        console.log('Fehlende Kategorien:', sportNodes.map(sport => sport.id).filter(x=>!sportsList.includes(x)))
 
         const continentsOrder = ["Europe", "Asia", "Africa", "Oceania", "America"];
         continentsOrder.forEach((continent, index) => {
