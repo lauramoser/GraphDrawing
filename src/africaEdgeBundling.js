@@ -96,7 +96,8 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         // Filter sports that have no connections in Europe and Asia
-        let sportsToRemoveEuropeAsia = new Set();
+        let sportsToRemoveEurope = new Set();
+        let sportsToRemoveAsia = new Set();
         sportNodes.forEach(sportNode => {
             let hasConnectionInEurope = false;
             let hasConnectionInAsia = false;
@@ -112,15 +113,21 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                 }
             });
-            if (!hasConnectionInEurope && !hasConnectionInAsia) {
-                sportsToRemoveEuropeAsia.add(sportNode.id);
+            if (!hasConnectionInEurope) {
+                sportsToRemoveEurope.add(sportNode.id);
+            }
+            if (!hasConnectionInAsia) {
+                sportsToRemoveAsia.add(sportNode.id);
             }
         });
 
-        console.log('Sports to remove from Europe and Asia:', Array.from(sportsToRemoveEuropeAsia));
+        // For debugging
+        console.log('Sports to remove from Europe:', Array.from(sportsToRemoveEurope));
+        console.log('Sports to remove fromAsia:', Array.from(sportsToRemoveAsia));
 
         // Filter sports that have no connections in Oceania and America
-        let sportsToRemoveOceaniaAmerica = new Set();
+        let sportsToRemoveAmerica = new Set();
+        let sportsToRemoveOceania = new Set();
         sportNodes.forEach(sportNode => {
             let hasConnectionInOceania = false;
             let hasConnectionInAmerica = false;
@@ -136,12 +143,21 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                 }
             });
-            if (!hasConnectionInOceania && !hasConnectionInAmerica) {
-                sportsToRemoveOceaniaAmerica.add(sportNode.id);
+            if (!hasConnectionInAmerica) {
+                sportsToRemoveAmerica.add(sportNode.id);
+            }
+            if (!hasConnectionInOceania) {
+                sportsToRemoveOceania.add(sportNode.id);
             }
         });
 
-        console.log('Sports to remove from Oceania and America:', Array.from(sportsToRemoveOceaniaAmerica));
+        // For debugging
+        console.log('Sports to remove from America:', Array.from(sportsToRemoveAmerica));
+        console.log('Sports to remove from Oceania:', Array.from(sportsToRemoveOceania));
+
+        // sport list for Zoe
+        // can be removed later on
+        console.log('Liste aller Sportarten:', sportNodes.map(sport => sport.id))
 
         const continentsOrder = ["Europe", "Asia", "Africa", "Oceania", "America"];
         continentsOrder.forEach((continent, index) => {
@@ -151,17 +167,16 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
 
-            // Todo: remove
+            // Just for debugging
+            // Todo: remove later on
             if (continent === "Europe") {
                 console.log('Länder in Europa:', countries.map(country => country.id));
             }
             if (continent === "Oceania") {
                 console.log('Länder in Ozeaninen:', countries.map(country => country.id));
-                console.log('Sportarten in Oceanien', sportNodes.map(sport => sport.id))
             }
             if (continent === "America") {
                 console.log('Länder in Amerika:', countries.map(country => country.id));
-                console.log('Sportarten in Amerika', sportNodes.map(sport => sport.id))
             }
 
             let sportToCountryLinks = [];
@@ -186,28 +201,28 @@ document.addEventListener('DOMContentLoaded', function () {
             let orderedCountries;
             if (continent === "Europe") {
                 filteredSportNodes = sportNodes
-                    .filter(sportNode => !sportsToRemoveEuropeAsia.has(sportNode.id) && europaSportOrder.includes(sportNode.id))
+                    .filter(sportNode => !sportsToRemoveEurope.has(sportNode.id) && europaSportOrder.includes(sportNode.id))
                     .sort((a, b) => europaSportOrder.indexOf(a.id) - europaSportOrder.indexOf(b.id));
                 orderedCountries = europaCountryOrder
                     .map(countryId => countries.find(country => country.id === countryId))
                     .filter(Boolean);
             } else if (continent === "Asia") {
                 filteredSportNodes = sportNodes
-                    .filter(sportNode => !sportsToRemoveEuropeAsia.has(sportNode.id) && asienSportOrder.includes(sportNode.id))
+                    .filter(sportNode => !sportsToRemoveAsia.has(sportNode.id) && asienSportOrder.includes(sportNode.id))
                     .sort((a, b) => asienSportOrder.indexOf(a.id) - asienSportOrder.indexOf(b.id));
                 orderedCountries = asienCountryOrder
                     .map(countryId => countries.find(country => country.id === countryId))
                     .filter(Boolean);
             } else if (continent === "Oceania") {
                 filteredSportNodes = sportNodes
-                    .filter(sportNode => !sportsToRemoveOceaniaAmerica.has(sportNode.id) && oceaniaSportOrder.includes(sportNode.id))
+                    .filter(sportNode => !sportsToRemoveOceania.has(sportNode.id) && oceaniaSportOrder.includes(sportNode.id))
                     .sort((a, b) => oceaniaSportOrder.indexOf(a.id) - oceaniaSportOrder.indexOf(b.id));
                 orderedCountries = oceaniaCountryOrder
                     .map(countryId => countries.find(country => country.id === countryId))
                     .filter(Boolean);
             } else if (continent === "America") {
                 filteredSportNodes = sportNodes
-                    .filter(sportNode => !sportsToRemoveOceaniaAmerica.has(sportNode.id) && americaSportOrder.includes(sportNode.id))
+                    .filter(sportNode => !sportsToRemoveAmerica.has(sportNode.id) && americaSportOrder.includes(sportNode.id))
                     .sort((a, b) => americaSportOrder.indexOf(a.id) - americaSportOrder.indexOf(b.id));
                 orderedCountries = americaCountryOrder
                     .map(countryId => countries.find(country => country.id === countryId))
@@ -235,10 +250,10 @@ document.addEventListener('DOMContentLoaded', function () {
             const isAfrica = continent === "Africa";
             const isAsia = continent === "Asia";
             rotationOffset = isEurope ? 260 * (Math.PI / 180) : rotationOffset;
-            rotationOffset = isOceania ? 205 * (Math.PI / 180) : rotationOffset;
-            rotationOffset = isAmerica ? -5 * (Math.PI / 180) : rotationOffset;
+            rotationOffset = isOceania ? 195 * (Math.PI / 180) : rotationOffset;
+            rotationOffset = isAmerica ? -15 * (Math.PI / 180) : rotationOffset;
             rotationOffset = isAfrica ? 85 * (Math.PI / 180) : rotationOffset;
-            rotationOffset = isAsia ? 85 * (Math.PI / 180) : rotationOffset;
+            rotationOffset = isAsia ? 70 * (Math.PI / 180) : rotationOffset;
 
             // Edge bundling for continents with a specific order
             // Auskommentiert, allerdings noch drin gelassen damit einfach ohne edge-bundling genutzt werden kann. Um einzelne Kanten besser nachverfolgen zu können.
